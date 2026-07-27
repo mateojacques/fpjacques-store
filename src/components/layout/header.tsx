@@ -14,7 +14,7 @@ import { useLogout } from '@/hooks/use-auth';
 const navigation = [
   { name: 'Inicio', href: '/' },
   { name: 'Productos', href: '/productos' },
-  { name: 'Categorias', href: '/categorias' },
+  { name: 'Categorías', href: '/categorias' },
   { name: 'FAQ', href: '/faq' },
 ];
 
@@ -110,7 +110,7 @@ export function Header() {
                 </button>
                 
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
+                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white py-1 shadow-md">
                     <Link
                       href="/perfil"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -123,7 +123,7 @@ export function Header() {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       onClick={() => setUserMenuOpen(false)}
                     >
-                      Mis Ordenes
+                      Mis Órdenes
                     </Link>
                     <button
                       onClick={() => {
@@ -132,7 +132,7 @@ export function Header() {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
-                      Cerrar Sesion
+                      Cerrar Sesión
                     </button>
                   </div>
                 )}
@@ -141,7 +141,7 @@ export function Header() {
               <div className="hidden md:flex items-center gap-2">
                 <Link href="/login">
                   <Button variant="ghost" size="sm">
-                    Iniciar Sesion
+                    Iniciar Sesión
                   </Button>
                 </Link>
                 <Link href="/registro">
@@ -219,7 +219,7 @@ export function Header() {
                     className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Mis Ordenes
+                    Mis Órdenes
                   </Link>
                   <button
                     onClick={() => {
@@ -228,14 +228,14 @@ export function Header() {
                     }}
                     className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
-                    Cerrar Sesion
+                    Cerrar Sesión
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 px-3">
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full">
-                      Iniciar Sesion
+                      Iniciar Sesión
                     </Button>
                   </Link>
                   <Link href="/registro" onClick={() => setMobileMenuOpen(false)}>

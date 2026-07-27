@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Package } from 'lucide-react';
 import type { Product } from '@/types';
-import { Button, Badge } from '@/components/ui';
+import { Button, Badge, Card } from '@/components/ui';
 import { formatPrice, isOnSale, getDiscountPercentage, getEffectivePrice } from '@/lib/utils';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useToast } from '@/components/ui/toast';
@@ -31,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-white rounded-lg border border-gray-200 overflow-hidden transition-shadow hover:shadow-md">
+    <Card padding="none" hover className="group overflow-hidden">
       {/* Image Container */}
       <Link href={`/productos/${product.sku}`} className="block relative aspect-square overflow-hidden bg-gray-100">
         {product.imageUrl ? (
@@ -90,6 +90,6 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.isActive ? 'Agregar al carrito' : 'No disponible'}
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }

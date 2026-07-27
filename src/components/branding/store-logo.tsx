@@ -39,10 +39,10 @@ export function StoreLogo({ variant = 'header', className = '' }: StoreLogoProps
       />
     </span>
   ) : (
-    <span 
-      className={`font-bold ${
-        variant === 'header' 
-          ? 'text-xl text-[var(--color-primary)]' 
+    <span
+      className={`font-display font-semibold ${
+        variant === 'header'
+          ? 'text-xl text-[var(--color-primary)]'
           : 'text-2xl text-white'
       } ${logoBoxClassName} ${className} overflow-hidden whitespace-nowrap text-ellipsis`}
     >

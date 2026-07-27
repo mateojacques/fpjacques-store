@@ -10,19 +10,19 @@ import { Skeleton } from '@/components/ui';
 const footerLinks = {
   shop: [
     { name: 'Todos los Productos', href: '/productos' },
-    { name: 'Categorias', href: '/categorias' },
+    { name: 'Categorías', href: '/categorias' },
     { name: 'Ofertas', href: '/productos?onSale=true' },
     { name: 'Novedades', href: '/productos?sortBy=createdAt&sortOrder=desc' },
   ],
   support: [
     { name: 'Preguntas Frecuentes', href: '/faq' },
-    { name: 'Envios', href: '/envios' },
+    { name: 'Envíos', href: '/envios' },
     { name: 'Devoluciones', href: '/devoluciones' },
     { name: 'Contacto', href: '/contacto' },
   ],
   legal: [
-    { name: 'Terminos y Condiciones', href: '/terminos' },
-    { name: 'Politica de Privacidad', href: '/privacidad' },
+    { name: 'Términos y Condiciones', href: '/terminos' },
+    { name: 'Política de Privacidad', href: '/privacidad' },
   ],
 };
 
@@ -96,7 +96,7 @@ export function Footer() {
 
           {/* Shop Links */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+            <h3 className="font-display text-base font-semibold text-white">
               Tienda
             </h3>
             <ul className="mt-4 space-y-3">
@@ -115,7 +115,7 @@ export function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+            <h3 className="font-display text-base font-semibold text-white">
               Ayuda
             </h3>
             <ul className="mt-4 space-y-3">
@@ -134,7 +134,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+            <h3 className="font-display text-base font-semibold text-white">
               Contacto
             </h3>
             {contactLoading ? (

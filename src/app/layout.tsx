@@ -1,13 +1,20 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Literata, Karla } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Header, Footer, CartDrawer, WhatsAppButton } from '@/components/layout';
 import { getStorefrontConfig } from '@/lib/api/storefront-server';
 
-const inter = Inter({
+const literata = Literata({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-literata',
+  display: 'swap',
+});
+
+const karla = Karla({
+  subsets: ['latin'],
+  variable: '--font-karla',
+  display: 'swap',
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} antialiased bg-gray-50`}>
+      <body className={`${literata.variable} ${karla.variable} antialiased bg-gray-50`}>
         <Providers>
           <div className="flex min-h-screen flex-col">
             <Header />

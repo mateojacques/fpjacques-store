@@ -20,7 +20,7 @@ function HeroBannerFallback() {
     <section className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          <h1 className="font-display text-balance text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
             Tu tienda de arte y libreria favorita
           </h1>
           <p className="mt-6 text-lg md:text-xl opacity-90">
@@ -76,7 +76,7 @@ function BannerSlideContent({ banner }: { banner: HeroBannerType }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-2xl text-white">
             {banner.title && (
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+              <h2 className="font-display text-balance text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight">
                 {banner.title}
               </h2>
             )}

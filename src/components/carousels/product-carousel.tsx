@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ShoppingCart, Package, ArrowRight } from 'lucide-react';
 import type { CarouselWithProducts, Product } from '@/types';
-import { Button, Badge, Skeleton } from '@/components/ui';
+import { Button, Badge, Skeleton, Card } from '@/components/ui';
 import { formatPrice, isOnSale, getDiscountPercentage, getEffectivePrice, cn } from '@/lib/utils';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useToast } from '@/components/ui/toast';
@@ -34,7 +34,11 @@ function CarouselProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="flex-shrink-0 w-[180px] sm:w-[220px] md:w-[260px] group bg-white rounded-lg border border-gray-200 overflow-hidden transition-shadow hover:shadow-md">
+    <Card
+      padding="none"
+      hover
+      className="flex-shrink-0 w-[180px] sm:w-[220px] md:w-[260px] group overflow-hidden"
+    >
       {/* Image Container */}
       <Link href={`/productos/${product.sku}`} className="block relative aspect-square overflow-hidden bg-gray-100">
         {product.imageUrl ? (
@@ -91,7 +95,7 @@ function CarouselProductCard({ product }: { product: Product }) {
           Agregar
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -150,7 +154,7 @@ export function ProductCarousel({ carousel }: ProductCarouselProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-4 sm:px-6 lg:px-8">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+          <h2 className="font-display text-xl md:text-2xl font-semibold text-gray-900">
             {carousel.name}
           </h2>
           {carousel.description && (

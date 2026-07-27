@@ -17,7 +17,7 @@ interface InlineSlimBannerProps {
  */
 export function InlineSlimBanner({ banner, className = '' }: InlineSlimBannerProps) {
   const content = (
-    <span className="relative block w-full overflow-hidden rounded-xl bg-gray-100 aspect-[1600/340]">
+    <span className="relative block w-full overflow-hidden rounded-lg bg-gray-100 aspect-[1600/340]">
       <Image
         src={banner.imageUrl}
         alt="Promocion"
@@ -50,7 +50,7 @@ export function InlineSlimBannerSkeleton() {
   return (
     <section className="py-6 md:py-8">
       <div className="px-4 sm:px-6 lg:px-8">
-        <Skeleton className="w-full rounded-xl aspect-[1600/340]" />
+        <Skeleton className="w-full rounded-lg aspect-[1600/340]" />
       </div>
     </section>
   );
