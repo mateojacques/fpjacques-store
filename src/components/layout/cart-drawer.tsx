@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCartStore } from '@/stores/cart-store';
 import { Button, Spinner } from '@/components/ui';
-import { formatPrice, getEffectivePrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 import { useCart, useUpdateCartItem, useRemoveCartItem } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 
@@ -100,10 +100,7 @@ export function CartDrawer() {
           ) : (
             <ul className="divide-y divide-gray-200">
               {cart?.items.map((item) => {
-                const effectivePrice = getEffectivePrice({
-                  regularPrice: item.product.regularPrice,
-                  salePrice: item.product.salePrice,
-                });
+                const effectivePrice = parseFloat(item.priceAtAdd);
                 const itemTotal = effectivePrice * item.quantity;
 
                 return (

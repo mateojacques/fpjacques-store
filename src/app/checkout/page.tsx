@@ -16,10 +16,10 @@ import { ApiException } from "@/lib/api";
 import { CheckoutSteps } from "@/components/features/checkout/checkout-steps";
 
 const contactSchema = z.object({
-  fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  email: z.string().email("Email invalido"),
-  phone: z.string().min(8, "El telefono debe tener al menos 8 caracteres"),
-  address: z.string().min(10, "La direccion debe tener al menos 10 caracteres"),
+  fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
+  email: z.string().email("Correo electrónico no válido."),
+  phone: z.string().min(8, "Ingrese un número de WhatsApp válido, con código de área."),
+  address: z.string().min(10, "La dirección debe tener al menos 10 caracteres."),
   customerNotes: z.string().optional(),
 });
 
@@ -58,6 +58,7 @@ export default function CheckoutContactPage() {
     reset,
     watch,
     setValue,
+    setError,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: "onBlur", // Changed from default to validate only on blur initially
@@ -99,9 +100,14 @@ export default function CheckoutContactPage() {
       router.push("/checkout/revision");
     } catch (err) {
       if (err instanceof ApiException) {
+        const phoneError = err.details?.find((detail) => detail.path === "phone");
+        if (phoneError) {
+          setError("phone", { message: phoneError.message });
+          return;
+        }
         showError("Error", err.message);
       } else {
-        showError("Error", "No se pudo guardar la informacion");
+        showError("Error", "No se pudieron guardar los datos.");
       }
     }
   };
@@ -121,10 +127,10 @@ export default function CheckoutContactPage() {
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
         <ShoppingBag className="h-16 w-16 mx-auto text-gray-300" />
         <h1 className="mt-4 text-2xl font-bold text-gray-900">
-          Tu carrito esta vacio
+          El carrito está vacío
         </h1>
         <Link href="/productos">
-          <Button className="mt-6">Ver Productos</Button>
+          <Button className="mt-6">Ver productos</Button>
         </Link>
       </div>
     );
@@ -135,7 +141,7 @@ export default function CheckoutContactPage() {
       <CheckoutSteps currentStep={1} />
 
       <h1 className="text-2xl font-bold text-gray-900 mt-8 mb-6">
-        Informacion de Contacto
+        Datos de contacto
       </h1>
 
       <Card>
@@ -143,38 +149,39 @@ export default function CheckoutContactPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Nombre completo"
-              placeholder="Tu nombre completo"
+              placeholder="Nombre y apellido"
               error={errors.fullName?.message}
               {...register("fullName")}
             />
 
             <Input
-              label="Correo electronico"
+              label="Correo electrónico"
               type="email"
-              placeholder="tu@email.com"
+              placeholder="nombre@ejemplo.com"
               error={errors.email?.message}
               {...register("email")}
             />
           </div>
 
           <Input
-            label="Telefono"
+            label="WhatsApp"
             type="tel"
-            placeholder="+54 11 4321-1234"
+            placeholder="+54 9 11 4321-1234"
+            helperText="El pedido se confirma por este medio."
             error={errors.phone?.message}
             {...register("phone")}
           />
 
           <Textarea
-            label="Direccion de envio"
-            placeholder="Ingresa tu direccion completa (calle, numero, distrito, ciudad)"
+            label="Dirección de entrega"
+            placeholder="Calle, número, localidad y provincia"
             error={errors.address?.message}
             {...register("address")}
           />
 
           <Textarea
             label="Notas adicionales (opcional)"
-            placeholder="Instrucciones especiales para el envio o el pedido"
+            placeholder="Instrucciones para el pedido"
             {...register("customerNotes")}
           />
 

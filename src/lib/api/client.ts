@@ -8,12 +8,19 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 export class ApiException extends Error {
   public status: number;
   public code: string;
+  public details?: { path: string; message: string }[];
 
-  constructor(message: string, status: number, code: string = 'UNKNOWN_ERROR') {
+  constructor(
+    message: string,
+    status: number,
+    code: string = 'UNKNOWN_ERROR',
+    details?: { path: string; message: string }[]
+  ) {
     super(message);
     this.name = 'ApiException';
     this.status = status;
     this.code = code;
+    this.details = details;
   }
 }
 
@@ -88,7 +95,8 @@ async function handleResponse<T>(response: Response): Promise<T> {
     throw new ApiException(
       errorData?.error?.message || `HTTP Error: ${response.status}`,
       response.status,
-      errorData?.error?.code || 'HTTP_ERROR'
+      errorData?.error?.code || 'HTTP_ERROR',
+      errorData?.error?.details
     );
   }
 

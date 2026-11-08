@@ -7,7 +7,7 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Button, Spinner, Card } from '@/components/ui';
 import { useCart, useUpdateCartItem, useRemoveCartItem, useClearCart } from '@/hooks/use-cart';
 import { useCartStore } from '@/stores/cart-store';
-import { formatPrice, getEffectivePrice, cn } from '@/lib/utils';
+import { formatPrice, cn } from '@/lib/utils';
 
 export default function CartPage() {
   const { data: cartData, isLoading } = useCart();
@@ -80,10 +80,7 @@ export default function CartPage() {
           <Card padding="none">
             <ul className="divide-y divide-gray-200">
               {cart?.items.map((item) => {
-                const effectivePrice = getEffectivePrice({
-                  regularPrice: item.product.regularPrice,
-                  salePrice: item.product.salePrice,
-                });
+                const effectivePrice = parseFloat(item.priceAtAdd);
                 const itemTotal = effectivePrice * item.quantity;
 
                 return (
