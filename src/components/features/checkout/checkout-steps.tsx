@@ -7,8 +7,8 @@ interface CheckoutStepsProps {
 
 const steps = [
   { number: 1, name: 'Contacto' },
-  { number: 2, name: 'Revision' },
-  { number: 3, name: 'Confirmacion' },
+  { number: 2, name: 'Revisión' },
+  { number: 3, name: 'Pedido enviado' },
 ];
 
 export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {

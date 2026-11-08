@@ -12,8 +12,8 @@ import type { OrderStatus } from '@/types';
 
 const statusConfig: Record<OrderStatus, { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info'; icon: typeof Clock }> = {
   pending: { label: 'Pendiente', variant: 'warning', icon: Clock },
-  confirmed: { label: 'Confirmada', variant: 'success', icon: CheckCircle },
-  processing: { label: 'En proceso', variant: 'info', icon: Package },
+  confirmed: { label: 'Confirmado', variant: 'success', icon: CheckCircle },
+  processing: { label: 'En preparación', variant: 'info', icon: Package },
   shipped: { label: 'Enviado', variant: 'success', icon: Truck },
   delivered: { label: 'Entregado', variant: 'success', icon: CheckCircle },
   cancelled: { label: 'Cancelado', variant: 'danger', icon: XCircle },
@@ -49,11 +49,11 @@ export default function OrdersPage() {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
         <Package className="h-16 w-16 mx-auto text-gray-300" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">No tienes ordenes</h1>
-        <p className="mt-2 text-gray-500">Aun no has realizado ninguna compra</p>
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">No hay pedidos</h1>
+        <p className="mt-2 text-gray-500">Los pedidos enviados aparecen aquí.</p>
         <Link href="/productos">
           <Button className="mt-6">
-            Ver Productos
+            Ver productos
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -63,7 +63,7 @@ export default function OrdersPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Mis Ordenes</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Mis pedidos</h1>
 
       <div className="space-y-4">
         {orders.map((order) => {
@@ -93,7 +93,7 @@ export default function OrdersPage() {
 
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-sm text-gray-500">Total</p>
+                    <p className="text-sm text-gray-500">Total estimado</p>
                     <p className="text-lg font-semibold text-[var(--color-primary)]">
                       {formatPrice(order.total)}
                     </p>

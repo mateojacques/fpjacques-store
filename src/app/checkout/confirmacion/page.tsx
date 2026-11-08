@@ -20,24 +20,24 @@ function ConfirmationContent() {
       </div>
 
       <h1 className="mt-6 text-3xl font-bold text-gray-900">
-        Pedido Confirmado!
+        Pedido recibido
       </h1>
 
       <p className="mt-4 text-lg text-gray-600">
-        Gracias por tu compra. Hemos recibido tu pedido.
+        El precio final, el pago y la entrega se confirman por WhatsApp.
       </p>
 
       {orderNumber && (
         <Card className="mt-8 max-w-md mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Package className="h-6 w-6 text-[var(--color-primary)]" />
-            <span className="text-gray-600">Numero de orden:</span>
+            <span className="text-gray-600">Número de pedido:</span>
           </div>
           <p className="text-2xl font-bold text-[var(--color-primary)]">
             {orderNumber}
           </p>
           <p className="mt-4 text-sm text-gray-500">
-            Te hemos enviado un correo con los detalles de tu pedido.
+            El detalle se envió por correo electrónico.
           </p>
         </Card>
       )}
@@ -46,14 +46,14 @@ function ConfirmationContent() {
         {isAuthenticated && (
           <Link href="/mis-ordenes">
             <Button>
-              Ver mis ordenes
+              Ver mis pedidos
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         )}
         <Link href="/productos">
           <Button variant={isAuthenticated ? "outline" : "primary"}>
-            Seguir comprando
+            Ver productos
           </Button>
         </Link>
       </div>

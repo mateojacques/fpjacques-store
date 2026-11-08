@@ -87,13 +87,13 @@ export function CartDrawer() {
           ) : isEmpty ? (
             <div className="flex flex-col items-center justify-center h-full px-4 text-center">
               <ShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
-              <p className="text-lg font-medium text-gray-900">Tu carrito esta vacio</p>
+              <p className="text-lg font-medium text-gray-900">El carrito está vacío</p>
               <p className="mt-1 text-sm text-gray-500">
-                Agrega productos para comenzar tu compra
+                No hay productos agregados.
               </p>
               <Link href="/productos" onClick={closeCart}>
                 <Button className="mt-6">
-                  Ver Productos
+                  Ver productos
                 </Button>
               </Link>
             </div>
@@ -188,18 +188,18 @@ export function CartDrawer() {
         {!isEmpty && (
           <div className="border-t border-gray-200 px-4 py-4 space-y-4">
             <div className="flex items-center justify-between text-base font-medium">
-              <span className="text-gray-900">Subtotal</span>
+              <span className="text-gray-900">Total estimado</span>
               <span className="text-gray-900">{formatPrice(cart?.subtotal || '0')}</span>
             </div>
             <p className="text-xs text-gray-500">
-              Impuestos y envio calculados en el checkout
+              Los precios y la entrega se confirman por WhatsApp.
             </p>
             <div className="flex flex-col gap-2">
               <Link href="/checkout" onClick={closeCart} className="w-full">
-                <Button className="w-full">Proceder al Checkout</Button>
+                <Button className="w-full">Continuar con el pedido</Button>
               </Link>
               <Link href="/carrito" onClick={closeCart} className="w-full">
-                <Button variant="outline" className="w-full">Ver Carrito</Button>
+                <Button variant="outline" className="w-full">Ver carrito</Button>
               </Link>
             </div>
           </div>

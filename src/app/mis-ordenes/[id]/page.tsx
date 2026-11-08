@@ -16,8 +16,8 @@ interface OrderDetailPageProps {
 
 const statusConfig: Record<OrderStatus, { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info'; icon: typeof Clock }> = {
   pending: { label: 'Pendiente', variant: 'warning', icon: Clock },
-  confirmed: { label: 'Confirmada', variant: 'success', icon: CheckCircle },
-  processing: { label: 'En proceso', variant: 'info', icon: Package },
+  confirmed: { label: 'Confirmado', variant: 'success', icon: CheckCircle },
+  processing: { label: 'En preparación', variant: 'info', icon: Package },
   shipped: { label: 'Enviado', variant: 'success', icon: Truck },
   delivered: { label: 'Entregado', variant: 'success', icon: CheckCircle },
   cancelled: { label: 'Cancelado', variant: 'danger', icon: XCircle },
@@ -52,9 +52,9 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
         <Package className="h-16 w-16 mx-auto text-gray-300" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">Orden no encontrada</h1>
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">Pedido no encontrado</h1>
         <Link href="/mis-ordenes">
-          <Button className="mt-6">Ver mis ordenes</Button>
+          <Button className="mt-6">Ver mis pedidos</Button>
         </Link>
       </div>
     );
@@ -78,7 +78,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{order.orderNumber}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Pedido {order.orderNumber}</h1>
           <p className="text-sm text-gray-500 mt-1">
             Realizado el {formatDate(order.createdAt)}
           </p>
@@ -92,7 +92,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       <div className="space-y-6">
         {/* Contact Information */}
         <Card>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Informacion de Contacto</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Datos de contacto</h2>
 
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div className="flex items-start gap-3">
@@ -105,21 +105,21 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div className="flex items-start gap-3">
               <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Email</dt>
+                <dt className="text-gray-500">Correo electrónico</dt>
                 <dd className="font-medium text-gray-900">{order.contactEmail}</dd>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Telefono</dt>
+                <dt className="text-gray-500">WhatsApp</dt>
                 <dd className="font-medium text-gray-900">{order.contactPhone}</dd>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Direccion</dt>
+                <dt className="text-gray-500">Dirección de entrega</dt>
                 <dd className="font-medium text-gray-900">{order.contactAddress}</dd>
               </div>
             </div>
@@ -170,22 +170,9 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
         <Card>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Resumen</h2>
 
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="text-gray-900">{formatPrice(order.subtotal)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Envio</span>
-              <span className="text-gray-500">Incluido</span>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 mt-4 pt-4">
-            <div className="flex justify-between text-lg font-semibold">
-              <span className="text-gray-900">Total</span>
-              <span className="text-[var(--color-primary)]">{formatPrice(order.total)}</span>
-            </div>
+          <div className="flex justify-between text-lg font-semibold">
+            <span className="text-gray-900">Total estimado</span>
+            <span className="text-[var(--color-primary)]">{formatPrice(order.total)}</span>
           </div>
         </Card>
       </div>

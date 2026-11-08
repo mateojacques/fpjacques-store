@@ -37,8 +37,8 @@ export default function CheckoutReviewPage() {
     try {
       const result = await confirmOrder.mutateAsync();
       success(
-        "Orden confirmada",
-        `Tu orden ${result.data.orderNumber} ha sido creada`,
+        "Pedido enviado",
+        `Número de pedido: ${result.data.orderNumber}`,
       );
       router.push(
         `/checkout/confirmacion?orderNumber=${result.data.orderNumber}`,
@@ -47,7 +47,7 @@ export default function CheckoutReviewPage() {
       if (err instanceof ApiException) {
         showError("Error", err.message);
       } else {
-        showError("Error", "No se pudo confirmar la orden");
+        showError("Error", "No se pudo enviar el pedido.");
       }
     }
   };
@@ -70,7 +70,7 @@ export default function CheckoutReviewPage() {
       <CheckoutSteps currentStep={2} />
 
       <h1 className="text-2xl font-bold text-gray-900 mt-8 mb-6">
-        Revisar Pedido
+        Revisar pedido
       </h1>
 
       <div className="space-y-6">
@@ -78,7 +78,7 @@ export default function CheckoutReviewPage() {
         <Card>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Informacion de Contacto
+              Datos de contacto
             </h2>
             <Link
               href="/checkout"
@@ -101,7 +101,7 @@ export default function CheckoutReviewPage() {
             <div className="flex items-start gap-3">
               <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Email</dt>
+                <dt className="text-gray-500">Correo electrónico</dt>
                 <dd className="font-medium text-gray-900">
                   {review.contact.email}
                 </dd>
@@ -110,7 +110,7 @@ export default function CheckoutReviewPage() {
             <div className="flex items-start gap-3">
               <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Telefono</dt>
+                <dt className="text-gray-500">WhatsApp</dt>
                 <dd className="font-medium text-gray-900">
                   {review.contact.phone}
                 </dd>
@@ -119,7 +119,7 @@ export default function CheckoutReviewPage() {
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
-                <dt className="text-gray-500">Direccion</dt>
+                <dt className="text-gray-500">Dirección de entrega</dt>
                 <dd className="font-medium text-gray-900">
                   {review.contact.address}
                 </dd>
@@ -180,28 +180,18 @@ export default function CheckoutReviewPage() {
         <Card>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Resumen</h2>
 
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="text-gray-900">
-                {formatPrice(review.subtotal)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Envio</span>
-              <span className="text-gray-500">Gratis</span>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 mt-4 pt-4">
-            <div className="flex justify-between text-base font-semibold">
-              <span className="text-gray-900">Total</span>
-              <span className="text-[var(--color-primary)]">
-                {formatPrice(review.total)}
-              </span>
-            </div>
+          <div className="flex justify-between text-base font-semibold">
+            <span className="text-gray-900">Total estimado</span>
+            <span className="text-[var(--color-primary)]">
+              {formatPrice(review.total)}
+            </span>
           </div>
         </Card>
+
+        <p className="text-sm text-gray-600">
+          Los precios, la disponibilidad, el pago y la entrega se confirman por
+          WhatsApp después de enviar el pedido.
+        </p>
 
         {/* Actions */}
         <div className="flex justify-between">
@@ -215,7 +205,7 @@ export default function CheckoutReviewPage() {
             onClick={handleConfirmOrder}
             isLoading={confirmOrder.isPending}
           >
-            Confirmar Pedido
+            Enviar pedido
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

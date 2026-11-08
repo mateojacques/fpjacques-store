@@ -37,11 +37,11 @@ export default function CartPage() {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
         <ShoppingBag className="h-16 w-16 mx-auto text-gray-300" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">Tu carrito esta vacio</h1>
-        <p className="mt-2 text-gray-500">Agrega productos para comenzar tu compra</p>
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">El carrito está vacío</h1>
+        <p className="mt-2 text-gray-500">No hay productos agregados.</p>
         <Link href="/productos">
           <Button className="mt-6">
-            Ver Productos
+            Ver productos
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -59,7 +59,7 @@ export default function CartPage() {
   };
 
   const handleClearCart = () => {
-    if (confirm('Estas seguro de que quieres vaciar tu carrito?')) {
+    if (confirm('¿Vaciar el carrito?')) {
       clearCart.mutate();
     }
   };
@@ -67,7 +67,7 @@ export default function CartPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Carrito de Compras</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Carrito</h1>
         <Button variant="ghost" onClick={handleClearCart} className="text-red-600 hover:text-red-700">
           <Trash2 className="h-4 w-4 mr-2" />
           Vaciar carrito
@@ -187,29 +187,16 @@ export default function CartPage() {
         {/* Order Summary */}
         <div className="lg:col-span-4 mt-8 lg:mt-0">
           <Card className="sticky top-24">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Resumen del Pedido</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Resumen</h2>
 
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Productos ({cart?.itemCount})</span>
-                <span className="text-gray-900">{formatPrice(cart?.subtotal || '0')}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Envio</span>
-                <span className="text-gray-500">Calculado en checkout</span>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200 mt-4 pt-4">
-              <div className="flex justify-between text-base font-medium">
-                <span className="text-gray-900">Subtotal</span>
-                <span className="text-gray-900">{formatPrice(cart?.subtotal || '0')}</span>
-              </div>
+            <div className="flex justify-between text-base font-medium">
+              <span className="text-gray-900">Total estimado</span>
+              <span className="text-gray-900">{formatPrice(cart?.subtotal || '0')}</span>
             </div>
 
             <Link href="/checkout" className="block mt-6">
               <Button className="w-full" size="lg">
-                Proceder al Checkout
+                Continuar con el pedido
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -218,7 +205,7 @@ export default function CartPage() {
               href="/productos"
               className="block mt-3 text-center text-sm text-[var(--color-primary)] hover:opacity-80"
             >
-              Continuar comprando
+              Ver productos
             </Link>
           </Card>
         </div>
