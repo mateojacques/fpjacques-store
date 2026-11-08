@@ -11,12 +11,11 @@ const footerLinks = {
   shop: [
     { name: 'Todos los Productos', href: '/productos' },
     { name: 'Categorías', href: '/categorias' },
-    { name: 'Ofertas', href: '/productos?onSale=true' },
     { name: 'Novedades', href: '/productos?sortBy=createdAt&sortOrder=desc' },
   ],
   support: [
     { name: 'Preguntas Frecuentes', href: '/faq' },
-    { name: 'Envíos', href: '/envios' },
+    { name: 'Entregas', href: '/envios' },
     { name: 'Devoluciones', href: '/devoluciones' },
     { name: 'Contacto', href: '/contacto' },
   ],
@@ -78,7 +77,7 @@ export function Footer() {
             ) : whatsappChannelUrl ? (
               <div className="mt-4 max-w-sm">
                 <p className="text-sm text-gray-300">
-                  Seguí nuestro canal de WhatsApp para no perderte las novedades!
+                  Canal de WhatsApp con novedades.
                 </p>
                 <a
                   href={whatsappChannelUrl}

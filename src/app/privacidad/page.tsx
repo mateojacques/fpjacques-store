@@ -1,105 +1,100 @@
 import type { Metadata } from 'next';
+import { getStorefrontConfig } from '@/lib/api/storefront-server';
 
 export const metadata: Metadata = {
-  title: 'Politica de Privacidad',
-  description: 'Politica de privacidad y proteccion de datos de San Pablo.',
+  title: 'Política de privacidad',
+  description: 'Política de privacidad y protección de datos de San Pablo.',
 };
 
-export default function PrivacidadPage() {
+export default async function PrivacidadPage() {
+  const config = await getStorefrontConfig();
+  const email = config.contact.email;
+
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-        Politica de Privacidad
+        Política de privacidad
       </h1>
 
       <div className="prose prose-gray max-w-none">
         <p className="text-gray-600 mb-6">
-          Ultima actualizacion: Enero 2025
+          Última actualización: noviembre de 2026
         </p>
 
         <div className="space-y-8">
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">1. Informacion que Recopilamos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">1. Información que se recopila</h2>
             <p className="text-gray-600">
-              Recopilamos informacion que nos proporcionas directamente, como tu nombre, correo electronico, 
-              direccion de envio y datos de pago cuando realizas una compra o creas una cuenta.
+              Se recopilan los datos ingresados al crear una cuenta o enviar un pedido: nombre, correo electrónico, número de WhatsApp y dirección de entrega.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">2. Uso de la Informacion</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">2. Uso de la información</h2>
             <p className="text-gray-600 mb-4">
-              Utilizamos la informacion recopilada para:
+              La información recopilada se utiliza para:
             </p>
             <ul className="list-disc pl-6 text-gray-600 space-y-2">
-              <li>Procesar y entregar tus pedidos</li>
-              <li>Enviar confirmaciones y actualizaciones de pedidos</li>
-              <li>Responder a tus consultas y solicitudes</li>
-              <li>Mejorar nuestros productos y servicios</li>
-              <li>Enviarte comunicaciones de marketing (con tu consentimiento)</li>
+              <li>Procesar y entregar los pedidos</li>
+              <li>Enviar confirmaciones y actualizaciones de los pedidos</li>
+              <li>Responder consultas y solicitudes</li>
+              <li>Mejorar los productos y servicios</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">3. Proteccion de Datos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">3. Protección de datos</h2>
             <p className="text-gray-600">
-              Implementamos medidas de seguridad tecnicas y organizativas para proteger tu informacion 
-              personal contra el acceso no autorizado, la alteracion, divulgacion o destruccion.
+              Se aplican medidas de seguridad técnicas y organizativas para proteger la información personal contra el acceso no autorizado, la alteración, la divulgación o la destrucción.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">4. Compartir Informacion</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">4. Información compartida</h2>
             <p className="text-gray-600">
-              No vendemos ni alquilamos tu informacion personal a terceros. Solo compartimos tu informacion 
-              con proveedores de servicios que nos ayudan a operar nuestro negocio, como empresas de envio 
-              y procesadores de pago.
+              Estos datos no se venden ni se alquilan. Solo se comparten con los proveedores de servicios necesarios para operar el sitio.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mb-3">5. Cookies</h2>
             <p className="text-gray-600">
-              Utilizamos cookies y tecnologias similares para mejorar tu experiencia en nuestro sitio, 
-              recordar tus preferencias y analizar el trafico del sitio.
+              Se utilizan cookies y tecnologías similares para mejorar la experiencia en el sitio, recordar preferencias y analizar el tráfico.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">6. Tus Derechos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">6. Derechos</h2>
             <p className="text-gray-600 mb-4">
-              Tienes derecho a:
+              Toda persona tiene derecho a:
             </p>
             <ul className="list-disc pl-6 text-gray-600 space-y-2">
-              <li>Acceder a tu informacion personal</li>
+              <li>Acceder a su información personal</li>
               <li>Corregir datos inexactos</li>
-              <li>Solicitar la eliminacion de tus datos</li>
-              <li>Oponerte al procesamiento de tus datos</li>
-              <li>Retirar tu consentimiento en cualquier momento</li>
+              <li>Solicitar la eliminación de sus datos</li>
+              <li>Oponerse al procesamiento de sus datos</li>
+              <li>Retirar su consentimiento en cualquier momento</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">7. Retencion de Datos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">7. Retención de datos</h2>
             <p className="text-gray-600">
-              Conservamos tu informacion personal durante el tiempo necesario para cumplir con los 
-              propositos descritos en esta politica, a menos que se requiera un periodo de retencion 
-              mas largo por ley.
+              La información personal se conserva durante el tiempo necesario para cumplir con los propósitos descritos en esta política, salvo que la ley exija un período de retención más largo.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">8. Cambios a esta Politica</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">8. Cambios a esta política</h2>
             <p className="text-gray-600">
-              Podemos actualizar esta politica de privacidad periodicamente. Te notificaremos sobre 
-              cambios significativos publicando la nueva politica en nuestro sitio web.
+              Esta política puede actualizarse periódicamente. Los cambios significativos se publican en este sitio.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mb-3">9. Contacto</h2>
             <p className="text-gray-600">
-              Si tienes preguntas sobre esta politica de privacidad, contactanos en privacidad@sanpablo.com.
+              Para consultas sobre esta política, escribir a {email}.
             </p>
           </section>
         </div>

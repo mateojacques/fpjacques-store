@@ -75,11 +75,10 @@ export default function FaqPage() {
           <HelpCircle className="h-8 w-8 text-[var(--color-primary)]" />
         </div>
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Preguntas Frecuentes
+          Preguntas frecuentes
         </h1>
         <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Encuentra respuestas a las preguntas mas comunes sobre nuestra tienda, 
-          envios, pagos y mas.
+          Respuestas a las preguntas más comunes sobre la tienda y los pedidos.
         </p>
       </div>
 
@@ -91,12 +90,12 @@ export default function FaqPage() {
           </div>
         ) : error ? (
           <div className="p-8 text-center">
-            <p className="text-red-600">Error al cargar las preguntas frecuentes</p>
+            <p className="text-red-600">No se pudieron cargar las preguntas frecuentes.</p>
           </div>
         ) : sortedFaqs.length === 0 ? (
           <div className="p-8 text-center">
             <p className="text-gray-600">
-              Aun no hay preguntas frecuentes configuradas.
+              Todavía no hay preguntas frecuentes.
             </p>
           </div>
         ) : (
@@ -115,11 +114,10 @@ export default function FaqPage() {
       <div className="mt-12 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] rounded-xl p-8 text-center text-white">
         <MessageCircle className="mx-auto h-10 w-10 mb-4" />
         <h2 className="text-2xl font-bold">
-          No encontraste lo que buscabas?
+          ¿Otra consulta?
         </h2>
         <p className="mt-2 opacity-90 max-w-xl mx-auto">
-          Nuestro equipo de soporte esta listo para ayudarte. Contactanos por cualquiera 
-          de nuestros canales y te responderemos a la brevedad.
+          Las consultas se responden por WhatsApp o por correo electrónico.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
           {contact?.whatsappNumber && (
@@ -129,7 +127,7 @@ export default function FaqPage() {
               rel="noopener noreferrer"
             >
               <Button className="bg-white text-[var(--color-primary)] hover:bg-gray-100 w-full sm:w-auto">
-                Escribenos al WhatsApp
+                Escribir por WhatsApp
               </Button>
             </a>
           )}
