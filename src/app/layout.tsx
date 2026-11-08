@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { Literata, Karla } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Header, Footer, CartDrawer, WhatsAppButton } from '@/components/layout';
 import { getStorefrontConfig } from '@/lib/api/storefront-server';
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const literata = Literata({
   subsets: ['latin'],
@@ -55,6 +58,7 @@ export default function RootLayout({
           <CartDrawer />
           <WhatsAppButton />
         </Providers>
+        {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
       </body>
     </html>
   );
