@@ -44,7 +44,7 @@ export const storefrontDefaults: StorefrontConfig = {
   
   seo: {
     metaTitle: 'San Pablo - Arte y Libros',
-    metaDescription: 'Tu tienda de arte y libreria favorita',
+    metaDescription: 'Arte, libros y artículos de librería.',
     ogImage: '',
   },
 

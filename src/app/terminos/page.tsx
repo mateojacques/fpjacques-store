@@ -3,8 +3,8 @@ import { getStorefrontConfig } from '@/lib/api/storefront-server';
 import { Markdown } from '@/components/content/markdown';
 
 export const metadata: Metadata = {
-  title: 'Terminos y Condiciones',
-  description: 'Terminos y condiciones de uso de San Pablo.',
+  title: 'Términos y condiciones',
+  description: 'Términos y condiciones de uso de San Pablo.',
 };
 
 export default async function TerminosPage() {
@@ -14,12 +14,12 @@ export default async function TerminosPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-        Terminos y Condiciones
+        Términos y condiciones
       </h1>
 
       {content.trim().length === 0 ? (
         <p className="text-gray-600">
-          Aun no hay terminos y condiciones configurados.
+          Los términos y condiciones no están disponibles.
         </p>
       ) : (
         <Markdown content={content} className="prose prose-gray max-w-none" />

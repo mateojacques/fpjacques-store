@@ -21,22 +21,21 @@ function HeroBannerFallback() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="max-w-2xl">
           <h1 className="font-display text-balance text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-            Tu tienda de arte y libreria favorita
+            Arte, libros y artículos de librería
           </h1>
           <p className="mt-6 text-lg md:text-xl opacity-90">
-            Descubre nuestra coleccion de productos para artistas, estudiantes y creativos. 
-            Calidad garantizada y los mejores precios.
+            Productos para artistas, estudiantes y creativos.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link href="/productos">
               <Button size="lg" className="bg-white text-[var(--color-primary)] hover:bg-gray-100 w-full sm:w-auto">
-                Ver Productos
+                Ver productos
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/categorias">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
-                Explorar Categorias
+                Ver categorías
               </Button>
             </Link>
           </div>

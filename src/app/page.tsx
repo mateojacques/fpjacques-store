@@ -37,7 +37,7 @@ export default function HomePage() {
                   Productos Destacados
                 </h2>
                 <p className="mt-2 text-gray-600">
-                  Los mas vendidos de nuestra tienda
+                  Los más vendidos
                 </p>
               </div>
               <Link href="/productos" className="hidden sm:flex items-center text-[var(--color-primary)] hover:opacity-80 font-medium">

@@ -36,13 +36,13 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login.mutateAsync(data);
-      success('Bienvenido', 'Has iniciado sesion correctamente');
+      success('Sesión iniciada');
       router.push('/');
     } catch (err) {
       if (err instanceof ApiException) {
         showError('Error', err.message);
       } else {
-        showError('Error', 'No se pudo iniciar sesion');
+        showError('Error', 'No se pudo iniciar sesión.');
       }
     }
   };
@@ -51,17 +51,14 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md" padding="lg">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Iniciar Sesion</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Ingresa a tu cuenta para continuar
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">Iniciar sesión</h1>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Input
-            label="Correo electronico"
+            label="Correo electrónico"
             type="email"
-            placeholder="tu@email.com"
+            placeholder="nombre@ejemplo.com"
             error={errors.email?.message}
             {...register('email')}
           />
@@ -70,7 +67,7 @@ export default function LoginPage() {
             <Input
               label="Contraseña"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Tu contraseña"
+              placeholder="Contraseña"
               error={errors.password?.message}
               {...register('password')}
             />
@@ -89,15 +86,15 @@ export default function LoginPage() {
             size="lg"
             isLoading={login.isPending}
           >
-            Iniciar Sesion
+            Iniciar sesión
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            No tienes una cuenta?{' '}
+            Sin cuenta:{' '}
             <Link href="/registro" className="font-medium text-[var(--color-primary)] hover:opacity-80">
-              Registrate aqui
+              Crear una cuenta
             </Link>
           </p>
         </div>

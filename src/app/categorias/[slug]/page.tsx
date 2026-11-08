@@ -83,15 +83,15 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <div className="text-center">
           <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
           <h2 className="mt-4 text-xl font-semibold text-gray-900">
-            Categoria no encontrada
+            Categoría no encontrada
           </h2>
           <p className="mt-2 text-gray-500">
-            La categoria que buscas no existe o fue eliminada.
+            La categoría no existe o fue eliminada.
           </p>
           <Link href="/categorias" className="mt-6 inline-block">
             <Button>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Volver a categorias
+              Volver a categorías
             </Button>
           </Link>
         </div>
@@ -108,7 +108,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         </Link>
         <ChevronRight className="h-4 w-4" />
         <Link href="/categorias" className="hover:text-[var(--color-primary)]">
-          Categorias
+          Categorías
         </Link>
         {parentPath.map((parent) => (
           <span key={parent.id} className="flex items-center gap-2">
@@ -158,7 +158,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Productos en {category.name}
         </h2>
-        <ProductGrid filters={filters} emptyMessage={`No hay productos en la categoria "${category.name}"`} />
+        <ProductGrid filters={filters} emptyMessage={`No hay productos en la categoría "${category.name}"`} />
       </div>
 
       {/* Link to all products with this category filter */}

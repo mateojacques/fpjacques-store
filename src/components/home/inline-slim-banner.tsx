@@ -20,7 +20,7 @@ export function InlineSlimBanner({ banner, className = '' }: InlineSlimBannerPro
     <span className="relative block w-full overflow-hidden rounded-lg bg-gray-100 aspect-[1600/340]">
       <Image
         src={banner.imageUrl}
-        alt="Promocion"
+        alt="Promoción"
         fill
         className="object-cover object-center"
         sizes="(max-width: 768px) 100vw, 1280px"
@@ -32,7 +32,7 @@ export function InlineSlimBanner({ banner, className = '' }: InlineSlimBannerPro
     <section className={`py-6 md:py-8 ${className}`}>
       <div className="px-4 sm:px-6 lg:px-8">
         {banner.link ? (
-          <Link href={banner.link} className="block" aria-label="Abrir promocion">
+          <Link href={banner.link} className="block" aria-label="Abrir promoción">
             {content}
           </Link>
         ) : (

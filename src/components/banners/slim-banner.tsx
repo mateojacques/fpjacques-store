@@ -62,7 +62,7 @@ export function SlimBanner({ className = '' }: SlimBannerProps) {
     <span className="relative block h-10 w-full overflow-hidden">
       <Image
         src={currentBanner.imageUrl}
-        alt="Promocion"
+        alt="Promoción"
         fill
         className="object-cover object-center"
         sizes="100vw"
@@ -79,7 +79,7 @@ export function SlimBanner({ className = '' }: SlimBannerProps) {
         <Link
           href={currentBanner.link}
           className="block"
-          aria-label="Abrir promocion"
+          aria-label="Abrir promoción"
         >
           {content}
         </Link>

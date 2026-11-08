@@ -80,7 +80,7 @@ export default function ProfilePage() {
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       await updateProfile.mutateAsync(data);
-      success('Perfil actualizado', 'Tus datos han sido actualizados');
+      success('Perfil actualizado', 'Datos actualizados.');
     } catch (err) {
       if (err instanceof ApiException) {
         showError('Error', err.message);
@@ -96,7 +96,7 @@ export default function ProfilePage() {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-      success('Contraseña actualizada', 'Tu contraseña ha sido cambiada');
+      success('Contraseña actualizada', 'Contraseña actualizada.');
       passwordForm.reset();
     } catch (err) {
       if (err instanceof ApiException) {
@@ -118,7 +118,7 @@ export default function ProfilePage() {
             <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg">
               <User className="h-5 w-5 text-[var(--color-primary)]" />
             </div>
-            <CardTitle>Informacion Personal</CardTitle>
+            <CardTitle>Información personal</CardTitle>
           </div>
 
           <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
@@ -129,7 +129,7 @@ export default function ProfilePage() {
             />
 
             <Input
-              label="Correo electronico"
+              label="Correo electrónico"
               type="email"
               error={profileForm.formState.errors.email?.message}
               {...profileForm.register('email')}

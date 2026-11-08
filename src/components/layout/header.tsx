@@ -123,7 +123,7 @@ export function Header() {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       onClick={() => setUserMenuOpen(false)}
                     >
-                      Mis Órdenes
+                      Mis pedidos
                     </Link>
                     <button
                       onClick={() => {
@@ -219,7 +219,7 @@ export function Header() {
                     className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Mis Órdenes
+                    Mis pedidos
                   </Link>
                   <button
                     onClick={() => {

@@ -45,7 +45,7 @@ export default function RegisterPage() {
         email: data.email,
         password: data.password,
       });
-      success('Cuenta creada', 'Tu cuenta ha sido creada exitosamente');
+      success('Cuenta creada', 'Cuenta creada.');
       router.push('/');
     } catch (err) {
       if (err instanceof ApiException) {
@@ -60,9 +60,9 @@ export default function RegisterPage() {
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md" padding="lg">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Crear Cuenta</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Crear cuenta</h1>
           <p className="mt-2 text-sm text-gray-600">
-            Registrate para comenzar a comprar
+            Para enviar pedidos y ver su estado.
           </p>
         </div>
 
@@ -70,15 +70,15 @@ export default function RegisterPage() {
           <Input
             label="Nombre completo"
             type="text"
-            placeholder="Tu nombre"
+            placeholder="Nombre"
             error={errors.fullName?.message}
             {...register('fullName')}
           />
 
           <Input
-            label="Correo electronico"
+            label="Correo electrónico"
             type="email"
-            placeholder="tu@email.com"
+            placeholder="nombre@ejemplo.com"
             error={errors.email?.message}
             {...register('email')}
           />
@@ -103,7 +103,7 @@ export default function RegisterPage() {
           <Input
             label="Confirmar contraseña"
             type={showPassword ? 'text' : 'password'}
-            placeholder="Repite tu contraseña"
+            placeholder="Repetir contraseña"
             error={errors.confirmPassword?.message}
             {...register('confirmPassword')}
           />
@@ -114,15 +114,15 @@ export default function RegisterPage() {
             size="lg"
             isLoading={registerMutation.isPending}
           >
-            Crear Cuenta
+            Crear cuenta
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Ya tienes una cuenta?{' '}
+            Cuenta existente:{' '}
             <Link href="/login" className="font-medium text-[var(--color-primary)] hover:opacity-80">
-              Inicia sesion
+              Iniciar sesión
             </Link>
           </p>
         </div>

@@ -10,8 +10,8 @@ import { Pagination } from '@/components/features/products/pagination';
 import type { ProductFilters } from '@/types';
 
 const sortOptions = [
-  { value: 'createdAt-desc', label: 'Mas recientes' },
-  { value: 'createdAt-asc', label: 'Mas antiguos' },
+  { value: 'createdAt-desc', label: 'Más recientes' },
+  { value: 'createdAt-asc', label: 'Más antiguos' },
   { value: 'name-asc', label: 'Nombre A-Z' },
   { value: 'name-desc', label: 'Nombre Z-A' },
   { value: 'price-asc', label: 'Precio menor a mayor' },
@@ -104,7 +104,7 @@ function ProductosContent() {
     <div className="space-y-6">
       {/* Categories */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Categorias</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Categorías</h3>
         <div className="space-y-2">
           <button
             onClick={() => updateParams({ categoryId: undefined })}
@@ -112,7 +112,7 @@ function ProductosContent() {
               !categoryId ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-medium' : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            Todas las categorias
+            Todas las categorías
           </button>
           {categories.map((cat) => (
             <button

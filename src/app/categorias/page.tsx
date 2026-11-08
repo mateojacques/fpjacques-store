@@ -68,17 +68,17 @@ export default function CategoriasPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Categorias
+          Categorías
         </h1>
         <p className="mt-2 text-gray-600">
-          Explora nuestras categorias de productos
+          Categorías de productos
         </p>
       </div>
 
       {/* Error State */}
       {error && (
         <div className="text-center py-12">
-          <p className="text-red-600">Error al cargar las categorias</p>
+          <p className="text-red-600">No se pudieron cargar las categorías.</p>
         </div>
       )}
 
@@ -104,10 +104,10 @@ export default function CategoriasPage() {
             <div className="text-center py-12">
               <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">
-                No hay categorias
+                No hay categorías
               </h3>
               <p className="mt-2 text-gray-500">
-                Aun no se han creado categorias en la tienda.
+                Todavía no hay categorías en la tienda.
               </p>
             </div>
           )}
@@ -118,7 +118,7 @@ export default function CategoriasPage() {
       {!isLoading && !error && categories.length > 0 && (
         <div className="mt-16">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Todas las Categorias
+            Todas las categorías
           </h2>
           <div className="bg-white rounded-lg border divide-y">
             {categories.map((category) => (

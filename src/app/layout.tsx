@@ -26,8 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
       default: seo.metaTitle || `${branding.storeName} - ${branding.tagline}`,
       template: `%s | ${branding.storeName}`,
     },
-    description: seo.metaDescription || `${branding.tagline}. Tu tienda favorita.`,
-    keywords: ['arte', 'libreria', 'tienda', 'productos', 'creatividad', branding.storeName.toLowerCase()],
+    description: seo.metaDescription || `${branding.tagline}.`,
+    keywords: ['arte', 'librería', 'tienda', 'productos', 'creatividad', branding.storeName.toLowerCase()],
     openGraph: {
       title: seo.metaTitle || branding.storeName,
       description: seo.metaDescription || branding.tagline,

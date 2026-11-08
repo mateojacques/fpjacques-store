@@ -72,7 +72,7 @@ export function InstagramFeed({ maxPosts = 6, className = '' }: InstagramFeedPro
               </h2>
             </div>
             <p className="mt-2 text-sm md:text-base text-gray-600 max-w-prose">
-              Inspiracion, lanzamientos y productos en fotos. Abri una publicacion para verla en detalle.
+              Inspiración, lanzamientos y productos en fotos.
             </p>
           </div>
 
@@ -108,12 +108,12 @@ export function InstagramFeed({ maxPosts = 6, className = '' }: InstagramFeedPro
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 ring-1 ring-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
-                  aria-label="Abrir publicacion en Instagram"
+                  aria-label="Abrir publicación en Instagram"
                 >
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
-                    alt={post.caption ? post.caption.slice(0, 80) : 'Publicacion de Instagram'}
+                    alt={post.caption ? post.caption.slice(0, 80) : 'Publicación de Instagram'}
                     fill
                     className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
@@ -164,7 +164,7 @@ export function InstagramFeed({ maxPosts = 6, className = '' }: InstagramFeedPro
             </a>
             <span className="hidden sm:inline text-gray-300" aria-hidden="true">|</span>
             <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-              Ver mas publicaciones
+              Ver más publicaciones
             </a>
           </div>
         )}

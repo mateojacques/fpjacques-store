@@ -145,7 +145,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           {/* Description */}
           {product.description && (
             <div className="mt-6">
-              <h2 className="text-sm font-semibold text-gray-900">Descripcion</h2>
+              <h2 className="text-sm font-semibold text-gray-900">Descripción</h2>
               <p className="mt-2 text-gray-600 whitespace-pre-line">
                 {product.description}
               </p>
