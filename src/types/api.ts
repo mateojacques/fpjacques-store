@@ -251,6 +251,17 @@ export interface CheckoutReview {
   total: string;
 }
 
+export interface SkippedOrderLine {
+  productSku: string;
+  productName: string;
+}
+
+export interface RepeatOrderResult {
+  cart: Cart;
+  /** Lines whose product was deleted, deactivated or unpublished. */
+  skipped: SkippedOrderLine[];
+}
+
 export interface CheckoutConfirmation {
   orderId: string;
   orderNumber: string;

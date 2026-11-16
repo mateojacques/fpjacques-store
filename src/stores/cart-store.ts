@@ -1,10 +1,12 @@
 import { create } from 'zustand';
-import type { Cart, CartItem } from '@/types';
+import type { Cart, CartItem, SkippedOrderLine } from '@/types';
 
 interface CartState {
   cart: Cart | null;
   isLoading: boolean;
   isOpen: boolean;
+  /** Products a repeated order could not add, shown once on the cart page. */
+  repeatSkipped: SkippedOrderLine[];
 }
 
 interface CartActions {
@@ -14,6 +16,7 @@ interface CartActions {
   closeCart: () => void;
   toggleCart: () => void;
   clearCart: () => void;
+  setRepeatSkipped: (skipped: SkippedOrderLine[]) => void;
 }
 
 interface CartComputedActions {
@@ -29,6 +32,7 @@ export const useCartStore = create<CartStore>()((set, get) => ({
   cart: null,
   isLoading: false,
   isOpen: false,
+  repeatSkipped: [],
 
   // Actions
   setCart: (cart) => set({ cart }),
@@ -37,6 +41,7 @@ export const useCartStore = create<CartStore>()((set, get) => ({
   closeCart: () => set({ isOpen: false }),
   toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
   clearCart: () => set({ cart: null }),
+  setRepeatSkipped: (repeatSkipped) => set({ repeatSkipped }),
 
   // Computed
   getItemCount: () => {

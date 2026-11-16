@@ -32,6 +32,7 @@ export function endSession(queryClient: QueryClient): void {
   const cart = useCartStore.getState();
   cart.closeCart();
   cart.clearCart();
+  cart.setRepeatSkipped([]);
   clearSessionId();
   resetViewerQueries(queryClient);
   // Don't keep showing the user's cart while the guest cart loads

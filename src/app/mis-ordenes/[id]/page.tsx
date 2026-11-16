@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Package, Clock, CheckCircle, Truck, XCircle, MapPin, Mail, Phone, User } from 'lucide-react';
 import { Button, Card, Badge, Spinner } from '@/components/ui';
 import { useOrderById } from '@/hooks/use-orders';
+import { RepeatOrderButton } from '@/components/features/orders';
 import { useAuthStore } from '@/stores/auth-store';
 import { formatPrice, formatDate } from '@/lib/utils';
 import type { OrderStatus } from '@/types';
@@ -83,10 +84,13 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             Realizado el {formatDate(order.createdAt)}
           </p>
         </div>
-        <Badge variant={config.variant} size="md">
-          <StatusIcon className="h-4 w-4 mr-1" />
-          {config.label}
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant={config.variant} size="md">
+            <StatusIcon className="h-4 w-4 mr-1" />
+            {config.label}
+          </Badge>
+          <RepeatOrderButton orderId={order.id} />
+        </div>
       </div>
 
       <div className="space-y-6">

@@ -11,7 +11,7 @@ export {
   useResetPassword,
 } from './use-auth';
 export { useSaveCheckoutContact, useCheckoutReview, useConfirmOrder } from './use-checkout';
-export { useOrders, useOrderById, useOrderByNumber } from './use-orders';
+export { useOrders, useOrderById, useOrderByNumber, useRepeatOrder } from './use-orders';
 export { useStorefrontConfig, useStorefrontBranding, useStorefrontColors, useStorefrontBanners, useStorefrontFaq, useStorefrontContact, useStorefrontSeo } from './use-storefront';
 export { useStorefrontCarousels, useCarouselBySlug, useCarouselById } from './use-carousels';
 export { useHomeSections } from './use-home-sections';

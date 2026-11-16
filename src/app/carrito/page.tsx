@@ -15,6 +15,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { formatPrice, cn } from '@/lib/utils';
 import { ProductPrice } from '@/components/features/products/product-price';
 import { OrderingNotices } from '@/components/features/checkout';
+import { RepeatSkippedNotice } from '@/components/features/orders';
 import { useAuthStore } from '@/stores/auth-store';
 import { CHECKOUT_LOGIN_PATH } from '@/lib/utils/safe-next';
 
@@ -47,6 +48,7 @@ export default function CartPage() {
   if (isEmpty) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <RepeatSkippedNotice className="mx-auto mb-8 max-w-xl" />
         <ShoppingBag className="h-16 w-16 mx-auto text-gray-300" />
         <h1 className="mt-4 text-2xl font-bold text-gray-900">El carrito está vacío</h1>
         <p className="mt-2 text-gray-500">No hay productos agregados.</p>
@@ -85,6 +87,7 @@ export default function CartPage() {
         </Button>
       </div>
 
+      <RepeatSkippedNotice className="mb-6" />
       <UnavailableItemsNotice count={unavailableCount} className="mb-6" />
 
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">

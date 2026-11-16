@@ -5,6 +5,7 @@ import type {
   ApiResponse,
   PaginatedResponse,
   UpdateOrderStatusInput,
+  RepeatOrderResult,
 } from '@/types';
 
 export const ordersApi = {
@@ -25,6 +26,12 @@ export const ordersApi = {
    */
   getByNumber: (orderNumber: string) =>
     apiClient.get<ApiResponse<Order>>(`/api/orders/number/${orderNumber}`),
+
+  /**
+   * Replace the cart with a past order's products, at current prices
+   */
+  repeat: (id: string) =>
+    apiClient.post<ApiResponse<RepeatOrderResult>>(`/api/orders/${id}/repeat`),
 
   /**
    * Update order status (admin only)

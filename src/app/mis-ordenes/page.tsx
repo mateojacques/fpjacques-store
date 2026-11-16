@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { RepeatOrderButton } from '@/components/features/orders';
 import { Package, Clock, CheckCircle, Truck, XCircle, ArrowRight } from 'lucide-react';
 import { Button, Card, Badge, Spinner } from '@/components/ui';
 import { useOrders } from '@/hooks/use-orders';
@@ -91,13 +92,14 @@ export default function OrdersPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Total estimado</p>
                     <p className="text-lg font-semibold text-[var(--color-primary)]">
                       {formatPrice(order.total)}
                     </p>
                   </div>
+                  <RepeatOrderButton orderId={order.id} />
                   <Link href={`/mis-ordenes/${order.id}`}>
                     <Button variant="outline" size="sm">
                       Ver detalle

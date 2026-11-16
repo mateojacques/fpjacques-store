@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ordersApi } from '@/lib/api';
 import type { OrderFilters } from '@/types';
 import { useAuthStore } from '@/stores/auth-store';
+import { useCartStore } from '@/stores/cart-store';
 
 /**
  * Hook to fetch user orders
@@ -40,5 +41,25 @@ export function useOrderByNumber(orderNumber: string) {
     queryKey: ['order', 'number', orderNumber],
     queryFn: () => ordersApi.getByNumber(orderNumber),
     enabled: isAuthenticated && !!orderNumber,
+  });
+}
+
+/**
+ * Hook to repeat an order into the cart. The API replaces the cart, so the
+ * returned cart becomes the cart query's data.
+ */
+export function useRepeatOrder() {
+  const queryClient = useQueryClient();
+  const { setCart, setRepeatSkipped } = useCartStore();
+
+  return useMutation({
+    mutationFn: (orderId: string) => ordersApi.repeat(orderId),
+    onSuccess: (response) => {
+      const { cart, skipped } = response.data;
+      queryClient.setQueryData(['cart'], { data: cart });
+      setCart(cart);
+      setRepeatSkipped(skipped);
+      queryClient.removeQueries({ queryKey: ['checkout'] });
+    },
   });
 }
