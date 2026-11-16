@@ -14,10 +14,14 @@ import { useCart, useUpdateCartItem, useRemoveCartItem, useClearCart } from '@/h
 import { useCartStore } from '@/stores/cart-store';
 import { formatPrice, cn } from '@/lib/utils';
 import { ProductPrice } from '@/components/features/products/product-price';
+import { OrderingNotices } from '@/components/features/checkout';
+import { useAuthStore } from '@/stores/auth-store';
+import { CHECKOUT_LOGIN_PATH } from '@/lib/utils/safe-next';
 
 export default function CartPage() {
   const { data: cartData, isLoading } = useCart({ fresh: true });
   const { cart, setCart } = useCartStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
   const clearCart = useClearCart();
@@ -239,7 +243,7 @@ export default function CartPage() {
                 </p>
               </>
             ) : (
-              <Link href="/checkout" className="block mt-6">
+              <Link href={isAuthenticated ? '/checkout' : CHECKOUT_LOGIN_PATH} className="block mt-6">
                 <Button className="w-full" size="lg">
                   Continuar con el pedido
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -253,6 +257,11 @@ export default function CartPage() {
             >
               Ver productos
             </Link>
+
+            <OrderingNotices
+              show={['availability', 'minimumOrder']}
+              className="mt-6 border-t border-gray-200 pt-4"
+            />
           </Card>
         </div>
       </div>

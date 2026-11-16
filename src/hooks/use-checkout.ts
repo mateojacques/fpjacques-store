@@ -15,11 +15,14 @@ export function useSaveCheckoutContact() {
 /**
  * Hook to get checkout review data
  */
-export function useCheckoutReview() {
+export function useCheckoutReview({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: ['checkout', 'review'],
     queryFn: () => checkoutApi.review(),
     staleTime: 0, // Always fresh
+    enabled,
+    // A missing profile or contact is not fixed by retrying
+    retry: false,
   });
 }
 

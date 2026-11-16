@@ -48,6 +48,11 @@ export const storefrontDefaults: StorefrontConfig = {
     ogImage: '',
   },
 
+  ordering: {
+    availabilityNotice: 'La disponibilidad y el plazo de entrega se confirman por WhatsApp.',
+    minimumOrderNotice: '',
+  },
+
   legal: {
     termsMarkdown: '',
   },

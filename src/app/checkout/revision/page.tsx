@@ -13,23 +13,37 @@ import {
   Mail,
   Phone,
   User,
+  Building2,
 } from "lucide-react";
 import { Button, Card, Spinner } from "@/components/ui";
-import { CheckoutSteps } from "@/components/features/checkout/checkout-steps";
+import { CheckoutSteps, OrderingNotices } from "@/components/features/checkout";
 import { useCheckoutReview, useConfirmOrder } from "@/hooks/use-checkout";
 import { useToast } from "@/components/ui/toast";
 import { formatPrice } from "@/lib/utils";
 import { ApiException } from "@/lib/api";
+import { useAuthStore } from "@/stores/auth-store";
+import { CHECKOUT_LOGIN_PATH } from "@/lib/utils/safe-next";
+import { formatCuit } from "@/lib/utils/account-form";
+
+const PROFILE_PATH = "/perfil?next=/checkout";
 
 export default function CheckoutReviewPage() {
   const router = useRouter();
-  const { data, isLoading, error } = useCheckoutReview();
+  const { isAuthenticated, isLoading: authLoading } = useAuthStore();
+  const { data, isLoading, error } = useCheckoutReview({
+    enabled: !authLoading && isAuthenticated,
+  });
   const confirmOrder = useConfirmOrder();
   const { success, error: showError } = useToast();
   const queryClient = useQueryClient();
 
   // Send the customer where the problem can be fixed, and say why
   const leaveReview = (err: unknown) => {
+    if (err instanceof ApiException && err.code === "PROFILE_INCOMPLETE") {
+      showError("Datos incompletos", err.message);
+      router.push(PROFILE_PATH);
+      return;
+    }
     if (err instanceof ApiException && err.code === "PRODUCTS_UNAVAILABLE") {
       showError(
         "Productos no disponibles",
@@ -52,6 +66,13 @@ export default function CheckoutReviewPage() {
     router.push("/checkout");
   };
 
+  // Ordering needs an account: send a visitor to log in or sign up first
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.replace(CHECKOUT_LOGIN_PATH);
+    }
+  }, [authLoading, isAuthenticated, router]);
+
   useEffect(() => {
     if (!isLoading && error) {
       leaveReview(error);
@@ -71,7 +92,10 @@ export default function CheckoutReviewPage() {
         `/checkout/confirmacion?orderNumber=${result.data.orderNumber}`,
       );
     } catch (err) {
-      if (err instanceof ApiException && err.code === "PRODUCTS_UNAVAILABLE") {
+      if (
+        err instanceof ApiException &&
+        (err.code === "PRODUCTS_UNAVAILABLE" || err.code === "PROFILE_INCOMPLETE")
+      ) {
         leaveReview(err);
       } else if (err instanceof ApiException) {
         showError("Error", err.message);
@@ -81,7 +105,7 @@ export default function CheckoutReviewPage() {
     }
   };
 
-  if (isLoading) {
+  if (authLoading || !isAuthenticated || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <Spinner size="lg" />
@@ -103,6 +127,41 @@ export default function CheckoutReviewPage() {
       </h1>
 
       <div className="space-y-6">
+        {/* Institution */}
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Institución</h2>
+            <Link
+              href={PROFILE_PATH}
+              className="text-sm text-[var(--color-primary)] hover:opacity-80"
+            >
+              Editar
+            </Link>
+          </div>
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div className="flex items-start gap-3">
+              <Building2 className="h-5 w-5 text-gray-400 mt-0.5" />
+              <div>
+                <dt className="text-gray-500">Nombre</dt>
+                <dd className="font-medium text-gray-900">
+                  {review.institution.name}
+                </dd>
+              </div>
+            </div>
+            {review.institution.cuit && (
+              <div className="flex items-start gap-3">
+                <div className="h-5 w-5" aria-hidden="true" />
+                <div>
+                  <dt className="text-gray-500">CUIT</dt>
+                  <dd className="font-medium text-gray-900">
+                    {formatCuit(review.institution.cuit)}
+                  </dd>
+                </div>
+              </div>
+            )}
+          </dl>
+        </Card>
+
         {/* Contact Information */}
         <Card>
           <div className="flex items-center justify-between mb-4">
@@ -216,6 +275,8 @@ export default function CheckoutReviewPage() {
             </span>
           </div>
         </Card>
+
+        <OrderingNotices show={["availability", "minimumOrder"]} />
 
         <p className="text-sm text-gray-600">
           Los precios, la disponibilidad, el pago y la entrega se confirman por

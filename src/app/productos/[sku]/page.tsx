@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/toast';
 import { Button, Badge, Spinner } from '@/components/ui';
 import { ProductPrice } from '@/components/features/products/product-price';
 import { formatPrice } from '@/lib/utils';
+import { OrderingNotices } from '@/components/features/checkout';
 
 interface ProductDetailPageProps {
   params: Promise<{ sku: string }>;
@@ -128,6 +129,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             ) : (
               <Badge variant="danger">No disponible</Badge>
             )}
+            <OrderingNotices show={['availability']} className="mt-3" />
           </div>
 
           {/* Description */}

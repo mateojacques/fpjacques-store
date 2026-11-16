@@ -10,3 +10,6 @@ export function safeNext(raw: string | null | undefined): string {
   if (/[\u0000-\u001f\u007f]/.test(raw)) return '/';
   return raw;
 }
+
+/** Where an anonymous visitor goes when trying to check out. */
+export const CHECKOUT_LOGIN_PATH = '/login?next=/checkout';

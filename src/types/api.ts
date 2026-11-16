@@ -238,6 +238,13 @@ export interface CheckoutReviewItem {
 }
 
 export interface CheckoutReview {
+  /** The institution the order is placed for, as the order will store it. */
+  institution: {
+    name: string;
+    cuit: string | null;
+    legalName: string | null;
+    ivaStatus: IvaStatus | null;
+  };
   contact: CheckoutContactInput;
   items: CheckoutReviewItem[];
   subtotal: string;
@@ -363,6 +370,13 @@ export interface StorefrontSeo {
   ogImage: string;
 }
 
+export interface StorefrontOrdering {
+  /** Shown on the product page, the cart and the checkout review. */
+  availabilityNotice: string;
+  /** Shown on the cart and the checkout review; empty means no line. */
+  minimumOrderNotice: string;
+}
+
 export interface StorefrontLegal {
   termsMarkdown: string;
   lastUpdated?: string;
@@ -380,6 +394,7 @@ export interface StorefrontConfig {
   faq: StorefrontFaq[];
   contact: StorefrontContact;
   seo: StorefrontSeo;
+  ordering?: StorefrontOrdering;
   legal?: StorefrontLegal;
 }
 

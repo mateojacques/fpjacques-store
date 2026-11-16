@@ -13,11 +13,14 @@ import {
 } from '@/components/features/cart';
 import { formatPrice } from '@/lib/utils';
 import { ProductPrice } from '@/components/features/products/product-price';
+import { useAuthStore } from '@/stores/auth-store';
+import { CHECKOUT_LOGIN_PATH } from '@/lib/utils/safe-next';
 import { useCart, useUpdateCartItem, useRemoveCartItem } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 
 export function CartDrawer() {
   const { isOpen, closeCart, cart, setCart } = useCartStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const { data: cartData, isLoading, refetch } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
@@ -246,7 +249,11 @@ export function CartDrawer() {
                   Continuar con el pedido
                 </Button>
               ) : (
-                <Link href="/checkout" onClick={closeCart} className="w-full">
+                <Link
+                  href={isAuthenticated ? '/checkout' : CHECKOUT_LOGIN_PATH}
+                  onClick={closeCart}
+                  className="w-full"
+                >
                   <Button className="w-full">Continuar con el pedido</Button>
                 </Link>
               )}

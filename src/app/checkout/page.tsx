@@ -13,6 +13,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useAuthStore } from "@/stores/auth-store";
 import { useToast } from "@/components/ui/toast";
 import { ApiException } from "@/lib/api";
+import { CHECKOUT_LOGIN_PATH } from "@/lib/utils/safe-next";
 import { CheckoutSteps } from "@/components/features/checkout/checkout-steps";
 import {
   UnavailableItemsNotice,
@@ -31,7 +32,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 
 export default function CheckoutContactPage() {
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuthStore();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuthStore();
   // Fetch the cart again on arrival, so availability is checked before the form shows
   const {
     data: cartData,
@@ -55,11 +56,11 @@ export default function CheckoutContactPage() {
     return {
       fullName: user?.fullName || "",
       email: user?.email || "",
-      phone: "",
+      phone: user?.phone || "",
       address: "",
       customerNotes: "",
     };
-  }, [user?.fullName, user?.email]);
+  }, [user?.fullName, user?.email, user?.phone]);
 
   const {
     register,
@@ -97,6 +98,13 @@ export default function CheckoutContactPage() {
     }
   }, [hasMounted, authLoading, formInitialized, initialFormValues, reset]);
 
+  // Ordering needs an account: send a visitor to log in or sign up first
+  useEffect(() => {
+    if (hasMounted && !authLoading && !isAuthenticated) {
+      router.replace(CHECKOUT_LOGIN_PATH);
+    }
+  }, [hasMounted, authLoading, isAuthenticated, router]);
+
   // Redirect if cart is empty
   useEffect(() => {
     if (!cartLoading && isEmpty) {
@@ -128,6 +136,7 @@ export default function CheckoutContactPage() {
     !hasMounted ||
     !formInitialized ||
     authLoading ||
+    !isAuthenticated ||
     cartLoading ||
     !cartChecked
   ) {
