@@ -24,6 +24,16 @@ export class ApiException extends Error {
   }
 }
 
+let onUnauthorized: (() => void) | null = null;
+
+/**
+ * Register what to do when a request that carried a token gets a 401: the
+ * session expired or the token is no longer valid.
+ */
+export function setUnauthorizedHandler(fn: () => void): void {
+  onUnauthorized = fn;
+}
+
 /**
  * Get auth token from localStorage
  */
@@ -82,8 +92,14 @@ function buildUrl(endpoint: string, params?: Record<string, unknown>): string {
 /**
  * Handle API response
  */
-async function handleResponse<T>(response: Response): Promise<T> {
+async function handleResponse<T>(response: Response, sentToken = false): Promise<T> {
   if (!response.ok) {
+    // Only a request that sent a token can reveal an expired session. A wrong
+    // password on /login sends none, so it never logs anyone out.
+    if (response.status === 401 && sentToken) {
+      onUnauthorized?.();
+    }
+
     let errorData: ApiError | null = null;
     
     try {
@@ -117,11 +133,9 @@ export const apiClient = {
    */
   async get<T>(endpoint: string, params?: Record<string, unknown>): Promise<T> {
     const url = buildUrl(endpoint, params);
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: buildHeaders(),
-    });
-    return handleResponse<T>(response);
+    const headers = buildHeaders();
+    const response = await fetch(url, { method: 'GET', headers });
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 
   /**
@@ -129,12 +143,13 @@ export const apiClient = {
    */
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
     const url = buildUrl(endpoint);
+    const headers = buildHeaders();
     const response = await fetch(url, {
       method: 'POST',
-      headers: buildHeaders(),
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 
   /**
@@ -142,12 +157,13 @@ export const apiClient = {
    */
   async put<T>(endpoint: string, data?: unknown): Promise<T> {
     const url = buildUrl(endpoint);
+    const headers = buildHeaders();
     const response = await fetch(url, {
       method: 'PUT',
-      headers: buildHeaders(),
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 
   /**
@@ -155,12 +171,13 @@ export const apiClient = {
    */
   async patch<T>(endpoint: string, data?: unknown): Promise<T> {
     const url = buildUrl(endpoint);
+    const headers = buildHeaders();
     const response = await fetch(url, {
       method: 'PATCH',
-      headers: buildHeaders(),
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 
   /**
@@ -168,11 +185,9 @@ export const apiClient = {
    */
   async delete<T>(endpoint: string): Promise<T> {
     const url = buildUrl(endpoint);
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: buildHeaders(),
-    });
-    return handleResponse<T>(response);
+    const headers = buildHeaders();
+    const response = await fetch(url, { method: 'DELETE', headers });
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 
   /**
@@ -194,6 +209,6 @@ export const apiClient = {
       headers,
       body: formData,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, headers.has('Authorization'));
   },
 };

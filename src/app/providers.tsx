@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { QueryProvider, StorefrontProvider } from '@/lib/providers';
+import { QueryProvider, SessionProvider, StorefrontProvider } from '@/lib/providers';
 import { ToastProvider } from '@/components/ui';
 import { ThemeStyles } from '@/components/theme';
 
@@ -12,12 +12,14 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <QueryProvider>
-      <StorefrontProvider>
-        <ThemeStyles />
-        <ToastProvider>
-          {children}
-        </ToastProvider>
-      </StorefrontProvider>
+      <SessionProvider>
+        <StorefrontProvider>
+          <ThemeStyles />
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </StorefrontProvider>
+      </SessionProvider>
     </QueryProvider>
   );
 }

@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApi } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
-import { useCartStore } from '@/stores/cart-store';
-import { clearSessionId } from '@/lib/utils';
+import { endSession, resetViewerQueries } from '@/lib/auth/viewer-queries';
 import { useMergeCart } from './use-cart';
 import type { LoginInput, RegisterInput, UpdateProfileInput, ChangePasswordInput } from '@/types';
 
@@ -49,8 +48,8 @@ export function useLogin() {
         }
       }
 
-      // Invalidate cart query to refetch
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      // Every price on screen was the guest's; refetch them as this user
+      resetViewerQueries(queryClient);
     },
   });
 }
@@ -80,7 +79,7 @@ export function useRegister() {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      resetViewerQueries(queryClient);
     },
   });
 }
@@ -89,29 +88,12 @@ export function useRegister() {
  * Hook to logout
  */
 export function useLogout() {
-  const { logout } = useAuthStore();
-  const { clearCart, closeCart } = useCartStore();
   const queryClient = useQueryClient();
 
   return () => {
-    logout();
-    closeCart();
-    clearCart();
-
-    // Drop any guest session/cart association
-    clearSessionId();
-
-    // Invalidate/remove only the sensitive user session data
-    queryClient.cancelQueries({ queryKey: ['cart'] });
-    queryClient.removeQueries({ queryKey: ['cart'] });
-    queryClient.cancelQueries({ queryKey: ['checkout'] });
-    queryClient.removeQueries({ queryKey: ['checkout'] });
-    queryClient.cancelQueries({ queryKey: ['profile'] });
-    queryClient.removeQueries({ queryKey: ['profile'] });
-    queryClient.cancelQueries({ queryKey: ['orders'] });
-    queryClient.removeQueries({ queryKey: ['orders'] });
-    queryClient.cancelQueries({ queryKey: ['order'] });
-    queryClient.removeQueries({ queryKey: ['order'] });
+    // Clears the user, the cart drawer and guest session, the user's private
+    // queries, and refetches prices as a visitor
+    endSession(queryClient);
   };
 }
 
