@@ -4,7 +4,6 @@ import type {
   ProductFilters,
   ApiResponse,
   PaginatedResponse,
-  CreateProductInput,
 } from '@/types';
 
 export const productsApi = {
@@ -25,24 +24,6 @@ export const productsApi = {
    */
   getBySku: (sku: string) =>
     apiClient.get<ApiResponse<Product>>(`/api/products/sku/${sku}`),
-
-  /**
-   * Create a new product (admin)
-   */
-  create: (data: CreateProductInput) =>
-    apiClient.post<ApiResponse<Product>>('/api/products', data),
-
-  /**
-   * Update a product (admin)
-   */
-  update: (id: string, data: Partial<Product>) =>
-    apiClient.put<ApiResponse<Product>>(`/api/products/${id}`, data),
-
-  /**
-   * Delete a product (admin)
-   */
-  delete: (id: string) =>
-    apiClient.delete<void>(`/api/products/${id}`),
 
   /**
    * Upload product image (admin)

@@ -5,8 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ShoppingCart, Package, ArrowRight } from 'lucide-react';
 import type { CarouselWithProducts, Product } from '@/types';
-import { Button, Badge, Skeleton, Card } from '@/components/ui';
-import { formatPrice, isOnSale, getDiscountPercentage, getEffectivePrice, cn } from '@/lib/utils';
+import { Button, Skeleton, Card } from '@/components/ui';
+import { cn } from '@/lib/utils';
+import { ProductPrice } from '@/components/features/products/product-price';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useToast } from '@/components/ui/toast';
 
@@ -17,10 +18,6 @@ interface ProductCarouselProps {
 function CarouselProductCard({ product }: { product: Product }) {
   const addToCart = useAddToCart();
   const { success, error } = useToast();
-  
-  const onSale = isOnSale(product);
-  const discount = getDiscountPercentage(product);
-  const effectivePrice = getEffectivePrice(product);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -54,13 +51,6 @@ function CarouselProductCard({ product }: { product: Product }) {
             <Package className="h-12 w-12 text-gray-300" />
           </div>
         )}
-        
-        {/* Sale Badge */}
-        {onSale && (
-          <div className="absolute top-2 left-2">
-            <Badge variant="danger" size="sm">-{discount}%</Badge>
-          </div>
-        )}
       </Link>
 
       {/* Content */}
@@ -72,16 +62,12 @@ function CarouselProductCard({ product }: { product: Product }) {
         </Link>
 
         {/* Price */}
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-base font-bold text-[var(--color-primary)]">
-            {formatPrice(effectivePrice)}
-          </span>
-          {onSale && (
-            <span className="text-xs text-gray-400 line-through">
-              {formatPrice(product.regularPrice)}
-            </span>
-          )}
-        </div>
+        <ProductPrice
+          price={product.price}
+          listPrice={product.listPrice}
+          size="sm"
+          className="mt-2"
+        />
 
         {/* Add to Cart Button */}
         <Button

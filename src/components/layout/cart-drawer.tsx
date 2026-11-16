@@ -12,6 +12,7 @@ import {
   isItemUnavailable,
 } from '@/components/features/cart';
 import { formatPrice } from '@/lib/utils';
+import { ProductPrice } from '@/components/features/products/product-price';
 import { useCart, useUpdateCartItem, useRemoveCartItem } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 
@@ -164,9 +165,13 @@ export function CartDrawer() {
                             No disponible
                           </Badge>
                         ) : (
-                          <p className="mt-1 text-sm font-medium text-[var(--color-primary)]">
-                            {formatPrice(effectivePrice)}
-                          </p>
+                          <ProductPrice
+                            price={item.priceAtAdd}
+                            listPrice={item.listPrice}
+                            size="sm"
+                            showLabel={false}
+                            className="mt-1"
+                          />
                         )}
                       </div>
                     </div>

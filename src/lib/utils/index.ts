@@ -72,36 +72,5 @@ export function truncate(text: string, maxLength: number): string {
   return `${text.substring(0, maxLength)}...`;
 }
 
-/**
- * Calculate effective price (sale price or regular price)
- */
-export function getEffectivePrice(product: { regularPrice: string; salePrice: string | null }): number {
-  const salePrice = product.salePrice ? parseFloat(product.salePrice) : null;
-  const regularPrice = parseFloat(product.regularPrice);
-  
-  if (salePrice && salePrice < regularPrice) {
-    return salePrice;
-  }
-  return regularPrice;
-}
-
-/**
- * Check if product is on sale
- */
-export function isOnSale(product: { regularPrice: string; salePrice: string | null }): boolean {
-  if (!product.salePrice) return false;
-  return parseFloat(product.salePrice) < parseFloat(product.regularPrice);
-}
-
-/**
- * Calculate discount percentage
- */
-export function getDiscountPercentage(product: { regularPrice: string; salePrice: string | null }): number {
-  if (!isOnSale(product)) return 0;
-  const regular = parseFloat(product.regularPrice);
-  const sale = parseFloat(product.salePrice!);
-  return Math.round(((regular - sale) / regular) * 100);
-}
-
 // Re-export home sections utilities
 export { interleaveHomeSections, interleaveHomeSectionsCustom } from './home-sections';

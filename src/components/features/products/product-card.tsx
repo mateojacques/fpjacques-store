@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Package } from 'lucide-react';
 import type { Product } from '@/types';
-import { Button, Badge, Card } from '@/components/ui';
-import { formatPrice, isOnSale, getDiscountPercentage, getEffectivePrice } from '@/lib/utils';
+import { Button, Card } from '@/components/ui';
+import { ProductPrice } from './product-price';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useToast } from '@/components/ui/toast';
 
@@ -16,10 +16,6 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useAddToCart();
   const { success, error } = useToast();
-  
-  const onSale = isOnSale(product);
-  const discount = getDiscountPercentage(product);
-  const effectivePrice = getEffectivePrice(product);
 
   const handleAddToCart = async () => {
     try {
@@ -47,13 +43,6 @@ export function ProductCard({ product }: ProductCardProps) {
             <Package className="h-16 w-16 text-gray-300" />
           </div>
         )}
-        
-        {/* Sale Badge */}
-        {onSale && (
-          <div className="absolute top-2 left-2">
-            <Badge variant="danger">-{discount}%</Badge>
-          </div>
-        )}
       </Link>
 
       {/* Content */}
@@ -67,16 +56,12 @@ export function ProductCard({ product }: ProductCardProps) {
         <p className="mt-1 text-xs text-gray-500">SKU: {product.sku}</p>
 
         {/* Price */}
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-lg font-bold text-[var(--color-primary)]">
-            {formatPrice(effectivePrice)}
-          </span>
-          {onSale && (
-            <span className="text-sm text-gray-400 line-through">
-              {formatPrice(product.regularPrice)}
-            </span>
-          )}
-        </div>
+        <ProductPrice
+          price={product.price}
+          listPrice={product.listPrice}
+          showSignupHint
+          className="mt-2"
+        />
 
         {/* Add to Cart Button */}
         <Button

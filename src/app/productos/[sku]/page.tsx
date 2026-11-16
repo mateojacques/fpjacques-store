@@ -8,7 +8,8 @@ import { useProductBySku } from '@/hooks/use-products';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useToast } from '@/components/ui/toast';
 import { Button, Badge, Spinner } from '@/components/ui';
-import { formatPrice, isOnSale, getDiscountPercentage, getEffectivePrice } from '@/lib/utils';
+import { ProductPrice } from '@/components/features/products/product-price';
+import { formatPrice } from '@/lib/utils';
 
 interface ProductDetailPageProps {
   params: Promise<{ sku: string }>;
@@ -46,10 +47,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       </div>
     );
   }
-
-  const onSale = isOnSale(product);
-  const discount = getDiscountPercentage(product);
-  const effectivePrice = getEffectivePrice(product);
 
   const handleAddToCart = async () => {
     try {
@@ -100,12 +97,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               <Package className="h-32 w-32 text-gray-300" />
             </div>
           )}
-          
-          {onSale && (
-            <div className="absolute top-4 left-4">
-              <Badge variant="danger" size="md">-{discount}%</Badge>
-            </div>
-          )}
         </div>
 
         {/* Product Info */}
@@ -119,16 +110,13 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           </h1>
 
           {/* Price */}
-          <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-[var(--color-primary)]">
-              {formatPrice(effectivePrice)}
-            </span>
-            {onSale && (
-              <span className="text-xl text-gray-400 line-through">
-                {formatPrice(product.regularPrice)}
-              </span>
-            )}
-          </div>
+          <ProductPrice
+            price={product.price}
+            listPrice={product.listPrice}
+            size="lg"
+            showSignupHint
+            className="mt-4"
+          />
 
           {/* Availability */}
           <div className="mt-4">
@@ -174,7 +162,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 </button>
               </div>
               <span className="text-sm text-gray-500">
-                Total: {formatPrice(effectivePrice * quantity)}
+                Total: {formatPrice(parseFloat(product.price) * quantity)}
               </span>
             </div>
           </div>

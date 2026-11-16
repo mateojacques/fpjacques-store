@@ -13,6 +13,7 @@ import {
 import { useCart, useUpdateCartItem, useRemoveCartItem, useClearCart } from '@/hooks/use-cart';
 import { useCartStore } from '@/stores/cart-store';
 import { formatPrice, cn } from '@/lib/utils';
+import { ProductPrice } from '@/components/features/products/product-price';
 
 export default function CartPage() {
   const { data: cartData, isLoading } = useCart({ fresh: true });
@@ -139,9 +140,12 @@ export default function CartPage() {
                             No disponible
                           </Badge>
                         ) : (
-                          <p className="mt-2 text-lg font-medium text-[var(--color-primary)]">
-                            {formatPrice(effectivePrice)}
-                          </p>
+                          <ProductPrice
+                            price={item.priceAtAdd}
+                            listPrice={item.listPrice}
+                            showLabel={false}
+                            className="mt-2"
+                          />
                         )}
 
                         {/* Mobile Actions */}

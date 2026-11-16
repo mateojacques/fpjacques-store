@@ -101,9 +101,10 @@ export interface Product {
   sku: string;
   name: string;
   description: string;
-  regularPrice: string;
-  salePrice: string | null;
-  specialPrice: string | null;
+  /** The price for this viewer: general for visitors, wholesale for logged-in users. */
+  price: string;
+  /** The general price, when it's higher than `price` (logged-in users only). */
+  listPrice: string | null;
   imageUrl: string | null;
   thumbnailUrl: string | null;
   videoUrl: string | null;
@@ -130,32 +131,14 @@ export interface ProductFilters {
   sortOrder?: "asc" | "desc";
 }
 
-export interface CreateProductInput {
-  sku: string;
-  name: string;
-  description?: string;
-  regularPrice: number;
-  salePrice?: number;
-  specialPrice?: number;
-  imageUrl?: string;
-  thumbnailUrl?: string;
-  videoUrl?: string;
-  weight?: number;
-  dimensionLength?: number;
-  dimensionWidth?: number;
-  dimensionHeight?: number;
-  categoryId?: string;
-  isActive?: boolean;
-}
-
 // ============ Cart Types ============
 export interface CartItemProduct {
   id: string;
   name: string;
   sku: string;
   imageUrl: string | null;
-  regularPrice: string;
-  salePrice: string | null;
+  price: string;
+  listPrice: string | null;
 }
 
 export interface CartItem {
@@ -163,6 +146,8 @@ export interface CartItem {
   productId: string;
   quantity: number;
   priceAtAdd: string;
+  /** The general price, crossed out next to priceAtAdd, when it's higher (logged-in users only). */
+  listPrice: string | null;
   /** False when the product can no longer be ordered; the checkout refuses the cart until it is removed. */
   isAvailable?: boolean;
   product: CartItemProduct;
