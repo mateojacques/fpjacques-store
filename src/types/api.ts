@@ -163,6 +163,8 @@ export interface CartItem {
   productId: string;
   quantity: number;
   priceAtAdd: string;
+  /** False when the product can no longer be ordered; the checkout refuses the cart until it is removed. */
+  isAvailable?: boolean;
   product: CartItemProduct;
   createdAt: string;
   updatedAt: string;

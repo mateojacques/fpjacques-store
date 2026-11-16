@@ -1,8 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cartApi } from '@/lib/api';
-import type { Cart, ApiResponse, AddToCartInput } from '@/types';
+import type { AddToCartInput } from '@/types';
 import { getOrCreateSessionId } from '@/lib/utils';
-import { useAuthStore } from '@/stores/auth-store';
 
 // Ensure session ID exists for guest users
 function ensureSessionId() {
@@ -12,11 +11,10 @@ function ensureSessionId() {
 }
 
 /**
- * Hook to fetch the current cart
+ * Hook to fetch the current cart. With `fresh`, it refetches on mount so
+ * product availability is current (cart page and checkout).
  */
-export function useCart() {
-  const { isAuthenticated } = useAuthStore();
-
+export function useCart({ fresh = false }: { fresh?: boolean } = {}) {
   return useQuery({
     queryKey: ['cart'],
     queryFn: async () => {
@@ -24,6 +22,7 @@ export function useCart() {
       return cartApi.get();
     },
     staleTime: 30 * 1000, // 30 seconds
+    refetchOnMount: fresh ? 'always' : true,
     enabled: typeof window !== 'undefined',
   });
 }

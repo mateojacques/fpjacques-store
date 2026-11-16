@@ -5,14 +5,19 @@ import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCartStore } from '@/stores/cart-store';
-import { Button, Spinner } from '@/components/ui';
+import { Badge, Button, Spinner } from '@/components/ui';
+import {
+  UnavailableItemsNotice,
+  countUnavailableItems,
+  isItemUnavailable,
+} from '@/components/features/cart';
 import { formatPrice } from '@/lib/utils';
 import { useCart, useUpdateCartItem, useRemoveCartItem } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 
 export function CartDrawer() {
   const { isOpen, closeCart, cart, setCart } = useCartStore();
-  const { data: cartData, isLoading } = useCart();
+  const { data: cartData, isLoading, refetch } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
 
@@ -22,6 +27,13 @@ export function CartDrawer() {
       setCart(cartData.data);
     }
   }, [cartData, setCart]);
+
+  // Check availability again each time the drawer opens
+  useEffect(() => {
+    if (isOpen) {
+      refetch();
+    }
+  }, [isOpen, refetch]);
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
@@ -47,6 +59,7 @@ export function CartDrawer() {
   };
 
   const isEmpty = !cart?.items || cart.items.length === 0;
+  const unavailableCount = countUnavailableItems(cart);
 
   return (
     <>
@@ -98,16 +111,24 @@ export function CartDrawer() {
               </Link>
             </div>
           ) : (
+            <>
+            <UnavailableItemsNotice count={unavailableCount} className="m-4" />
             <ul className="divide-y divide-gray-200">
               {cart?.items.map((item) => {
                 const effectivePrice = parseFloat(item.priceAtAdd);
                 const itemTotal = effectivePrice * item.quantity;
+                const unavailable = isItemUnavailable(item);
 
                 return (
-                  <li key={item.id} className="px-4 py-4">
+                  <li key={item.id} className={cn('px-4 py-4', unavailable && 'bg-yellow-50/60')}>
                     <div className="flex gap-4">
                       {/* Product Image */}
-                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <div
+                        className={cn(
+                          'relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100',
+                          unavailable && 'opacity-50'
+                        )}
+                      >
                         {item.product.imageUrl ? (
                           <Image
                             src={item.product.imageUrl}
@@ -124,23 +145,40 @@ export function CartDrawer() {
 
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <Link
-                          href={`/productos/${item.product.sku}`}
-                          className="text-sm font-medium text-gray-900 hover:text-[var(--color-primary)] line-clamp-2"
-                          onClick={closeCart}
-                        >
-                          {item.product.name}
-                        </Link>
+                        {unavailable ? (
+                          <p className="text-sm font-medium text-gray-500 line-clamp-2">
+                            {item.product.name}
+                          </p>
+                        ) : (
+                          <Link
+                            href={`/productos/${item.product.sku}`}
+                            className="text-sm font-medium text-gray-900 hover:text-[var(--color-primary)] line-clamp-2"
+                            onClick={closeCart}
+                          >
+                            {item.product.name}
+                          </Link>
+                        )}
                         <p className="mt-1 text-xs text-gray-500">SKU: {item.product.sku}</p>
-                        <p className="mt-1 text-sm font-medium text-[var(--color-primary)]">
-                          {formatPrice(effectivePrice)}
-                        </p>
+                        {unavailable ? (
+                          <Badge variant="warning" className="mt-1">
+                            No disponible
+                          </Badge>
+                        ) : (
+                          <p className="mt-1 text-sm font-medium text-[var(--color-primary)]">
+                            {formatPrice(effectivePrice)}
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     {/* Quantity & Actions */}
                     <div className="mt-3 flex items-center justify-between">
-                      <div className="flex items-center border border-gray-300 rounded-lg">
+                      <div
+                        className={cn(
+                          'flex items-center border border-gray-300 rounded-lg',
+                          unavailable && 'invisible'
+                        )}
+                      >
                         <button
                           onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1 || updateItem.isPending}
@@ -161,9 +199,11 @@ export function CartDrawer() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-900">
-                          {formatPrice(itemTotal)}
-                        </span>
+                        {!unavailable && (
+                          <span className="text-sm font-medium text-gray-900">
+                            {formatPrice(itemTotal)}
+                          </span>
+                        )}
                         <button
                           onClick={() => handleRemoveItem(item.id)}
                           disabled={removeItem.isPending}
@@ -181,6 +221,7 @@ export function CartDrawer() {
                 );
               })}
             </ul>
+            </>
           )}
         </div>
 
@@ -195,9 +236,15 @@ export function CartDrawer() {
               Los precios y la entrega se confirman por WhatsApp.
             </p>
             <div className="flex flex-col gap-2">
-              <Link href="/checkout" onClick={closeCart} className="w-full">
-                <Button className="w-full">Continuar con el pedido</Button>
-              </Link>
+              {unavailableCount > 0 ? (
+                <Button className="w-full" disabled>
+                  Continuar con el pedido
+                </Button>
+              ) : (
+                <Link href="/checkout" onClick={closeCart} className="w-full">
+                  <Button className="w-full">Continuar con el pedido</Button>
+                </Link>
+              )}
               <Link href="/carrito" onClick={closeCart} className="w-full">
                 <Button variant="outline" className="w-full">Ver carrito</Button>
               </Link>

@@ -14,6 +14,10 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useToast } from "@/components/ui/toast";
 import { ApiException } from "@/lib/api";
 import { CheckoutSteps } from "@/components/features/checkout/checkout-steps";
+import {
+  UnavailableItemsNotice,
+  countUnavailableItems,
+} from "@/components/features/cart";
 
 const contactSchema = z.object({
   fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -28,7 +32,12 @@ type ContactFormData = z.infer<typeof contactSchema>;
 export default function CheckoutContactPage() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuthStore();
-  const { data: cartData, isLoading: cartLoading } = useCart();
+  // Fetch the cart again on arrival, so availability is checked before the form shows
+  const {
+    data: cartData,
+    isLoading: cartLoading,
+    isFetchedAfterMount: cartChecked,
+  } = useCart({ fresh: true });
   const saveContact = useSaveCheckoutContact();
   const { error: showError } = useToast();
 
@@ -39,6 +48,7 @@ export default function CheckoutContactPage() {
 
   const cart = cartData?.data;
   const isEmpty = !cart?.items || cart.items.length === 0;
+  const unavailableCount = countUnavailableItems(cart);
 
   // Create initial form values only once after auth is loaded
   const initialFormValues = useMemo<ContactFormData>(() => {
@@ -114,7 +124,13 @@ export default function CheckoutContactPage() {
 
   // Show loading while component is mounting or auth/cart is loading
   // Wait for form to be properly initialized
-  if (!hasMounted || !formInitialized || authLoading || cartLoading) {
+  if (
+    !hasMounted ||
+    !formInitialized ||
+    authLoading ||
+    cartLoading ||
+    !cartChecked
+  ) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
@@ -131,6 +147,21 @@ export default function CheckoutContactPage() {
         </h1>
         <Link href="/productos">
           <Button className="mt-6">Ver productos</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  if (unavailableCount > 0) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+        <CheckoutSteps currentStep={1} />
+        <h1 className="text-2xl font-bold text-gray-900 mt-8 mb-6">
+          Revise el carrito
+        </h1>
+        <UnavailableItemsNotice count={unavailableCount} />
+        <Link href="/carrito" className="inline-block mt-6">
+          <Button>Ir al carrito</Button>
         </Link>
       </div>
     );

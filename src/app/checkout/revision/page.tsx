@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -25,13 +26,39 @@ export default function CheckoutReviewPage() {
   const { data, isLoading, error } = useCheckoutReview();
   const confirmOrder = useConfirmOrder();
   const { success, error: showError } = useToast();
+  const queryClient = useQueryClient();
 
-  // Redirect if no review data
+  // Send the customer where the problem can be fixed, and say why
+  const leaveReview = (err: unknown) => {
+    if (err instanceof ApiException && err.code === "PRODUCTS_UNAVAILABLE") {
+      showError(
+        "Productos no disponibles",
+        "Quite del carrito los productos marcados como no disponibles para continuar.",
+      );
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      router.push("/carrito");
+      return;
+    }
+    if (err instanceof ApiException && err.code === "CONTACT_NOT_PROVIDED") {
+      router.push("/checkout");
+      return;
+    }
+    showError(
+      "Error",
+      err instanceof ApiException
+        ? err.message
+        : "No se pudo cargar la revisión del pedido.",
+    );
+    router.push("/checkout");
+  };
+
   useEffect(() => {
     if (!isLoading && error) {
-      router.push("/checkout");
+      leaveReview(error);
     }
-  }, [isLoading, error, router]);
+    // Run once per failed load; leaveReview is recreated each render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, error]);
 
   const handleConfirmOrder = async () => {
     try {
@@ -44,7 +71,9 @@ export default function CheckoutReviewPage() {
         `/checkout/confirmacion?orderNumber=${result.data.orderNumber}`,
       );
     } catch (err) {
-      if (err instanceof ApiException) {
+      if (err instanceof ApiException && err.code === "PRODUCTS_UNAVAILABLE") {
+        leaveReview(err);
+      } else if (err instanceof ApiException) {
         showError("Error", err.message);
       } else {
         showError("Error", "No se pudo enviar el pedido.");

@@ -4,13 +4,18 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
-import { Button, Spinner, Card } from '@/components/ui';
+import { Badge, Button, Spinner, Card } from '@/components/ui';
+import {
+  UnavailableItemsNotice,
+  countUnavailableItems,
+  isItemUnavailable,
+} from '@/components/features/cart';
 import { useCart, useUpdateCartItem, useRemoveCartItem, useClearCart } from '@/hooks/use-cart';
 import { useCartStore } from '@/stores/cart-store';
 import { formatPrice, cn } from '@/lib/utils';
 
 export default function CartPage() {
-  const { data: cartData, isLoading } = useCart();
+  const { data: cartData, isLoading } = useCart({ fresh: true });
   const { cart, setCart } = useCartStore();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
@@ -32,6 +37,7 @@ export default function CartPage() {
   }
 
   const isEmpty = !cart?.items || cart.items.length === 0;
+  const unavailableCount = countUnavailableItems(cart);
 
   if (isEmpty) {
     return (
@@ -74,6 +80,8 @@ export default function CartPage() {
         </Button>
       </div>
 
+      <UnavailableItemsNotice count={unavailableCount} className="mb-6" />
+
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-8">
@@ -82,14 +90,20 @@ export default function CartPage() {
               {cart?.items.map((item) => {
                 const effectivePrice = parseFloat(item.priceAtAdd);
                 const itemTotal = effectivePrice * item.quantity;
+                const unavailable = isItemUnavailable(item);
 
                 return (
-                  <li key={item.id} className="p-4 sm:p-6">
+                  <li key={item.id} className={cn('p-4 sm:p-6', unavailable && 'bg-yellow-50/60')}>
                     <div className="flex gap-4 sm:gap-6">
                       {/* Product Image */}
                       <Link
                         href={`/productos/${item.product.sku}`}
-                        className="relative h-24 w-24 sm:h-32 sm:w-32 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100"
+                        className={cn(
+                          'relative h-24 w-24 sm:h-32 sm:w-32 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100',
+                          unavailable && 'pointer-events-none opacity-50'
+                        )}
+                        aria-disabled={unavailable}
+                        tabIndex={unavailable ? -1 : undefined}
                       >
                         {item.product.imageUrl ? (
                           <Image
@@ -107,20 +121,32 @@ export default function CartPage() {
 
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <Link
-                          href={`/productos/${item.product.sku}`}
-                          className="text-base sm:text-lg font-medium text-gray-900 hover:text-[var(--color-primary)] line-clamp-2"
-                        >
-                          {item.product.name}
-                        </Link>
+                        {unavailable ? (
+                          <p className="text-base sm:text-lg font-medium text-gray-500 line-clamp-2">
+                            {item.product.name}
+                          </p>
+                        ) : (
+                          <Link
+                            href={`/productos/${item.product.sku}`}
+                            className="text-base sm:text-lg font-medium text-gray-900 hover:text-[var(--color-primary)] line-clamp-2"
+                          >
+                            {item.product.name}
+                          </Link>
+                        )}
                         <p className="mt-1 text-sm text-gray-500">SKU: {item.product.sku}</p>
-                        <p className="mt-2 text-lg font-medium text-[var(--color-primary)]">
-                          {formatPrice(effectivePrice)}
-                        </p>
+                        {unavailable ? (
+                          <Badge variant="warning" size="md" className="mt-2">
+                            No disponible
+                          </Badge>
+                        ) : (
+                          <p className="mt-2 text-lg font-medium text-[var(--color-primary)]">
+                            {formatPrice(effectivePrice)}
+                          </p>
+                        )}
 
                         {/* Mobile Actions */}
                         <div className="mt-4 flex items-center justify-between sm:hidden">
-                          <div className="flex items-center border border-gray-300 rounded-lg">
+                          <div className={cn('flex items-center border border-gray-300 rounded-lg', unavailable && 'invisible')}>
                             <button
                               onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
@@ -139,6 +165,7 @@ export default function CartPage() {
                           <button
                             onClick={() => handleRemoveItem(item.id)}
                             className="p-2 text-gray-400 hover:text-red-600"
+                            aria-label="Quitar del carrito"
                           >
                             <Trash2 className="h-5 w-5" />
                           </button>
@@ -147,7 +174,7 @@ export default function CartPage() {
 
                       {/* Desktop Actions */}
                       <div className="hidden sm:flex flex-col items-end justify-between">
-                        <div className="flex items-center border border-gray-300 rounded-lg">
+                        <div className={cn('flex items-center border border-gray-300 rounded-lg', unavailable && 'invisible')}>
                           <button
                             onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
@@ -165,12 +192,15 @@ export default function CartPage() {
                         </div>
 
                         <div className="flex items-center gap-4">
-                          <span className="text-lg font-medium text-gray-900">
-                            {formatPrice(itemTotal)}
-                          </span>
+                          {!unavailable && (
+                            <span className="text-lg font-medium text-gray-900">
+                              {formatPrice(itemTotal)}
+                            </span>
+                          )}
                           <button
                             onClick={() => handleRemoveItem(item.id)}
                             className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                            aria-label="Quitar del carrito"
                           >
                             <Trash2 className="h-5 w-5" />
                           </button>
@@ -194,12 +224,24 @@ export default function CartPage() {
               <span className="text-gray-900">{formatPrice(cart?.subtotal || '0')}</span>
             </div>
 
-            <Link href="/checkout" className="block mt-6">
-              <Button className="w-full" size="lg">
-                Continuar con el pedido
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            {unavailableCount > 0 ? (
+              <>
+                <Button className="w-full mt-6" size="lg" disabled>
+                  Continuar con el pedido
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+                <p className="mt-2 text-sm text-gray-600">
+                  Quite los productos no disponibles para continuar.
+                </p>
+              </>
+            ) : (
+              <Link href="/checkout" className="block mt-6">
+                <Button className="w-full" size="lg">
+                  Continuar con el pedido
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            )}
 
             <Link
               href="/productos"
