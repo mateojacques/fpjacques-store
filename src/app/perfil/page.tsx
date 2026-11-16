@@ -1,36 +1,98 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { User, Lock } from 'lucide-react';
-import { Button, Input, Card, CardTitle, Spinner } from '@/components/ui';
+import { User, Lock, Building2 } from 'lucide-react';
+import { Button, Input, Card, CardTitle, Select, Spinner } from '@/components/ui';
 import { useAuthStore } from '@/stores/auth-store';
 import { useUpdateProfile, useChangePassword } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui/toast';
 import { ApiException } from '@/lib/api';
+import { safeNext } from '@/lib/utils/safe-next';
+import { applyApiFieldErrors, formatCuit, ivaStatusOptions } from '@/lib/utils/account-form';
+import type { IvaStatus, UpdateProfileInput, UserProfile } from '@/types';
 
 const profileSchema = z.object({
-  fullName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-  email: z.string().email('Email invalido'),
+  fullName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
+  email: z.string().email('Correo electrónico no válido.'),
+  phone: z
+    .string()
+    .refine(
+      (value) => value.trim() === '' || value.trim().length >= 8,
+      'Ingrese un número de WhatsApp válido, con código de área.'
+    ),
+  institutionName: z
+    .string()
+    .refine(
+      (value) => value.trim() === '' || value.trim().length >= 2,
+      'El nombre de la institución debe tener al menos 2 caracteres.'
+    ),
+  cuit: z.string(),
+  legalName: z.string().max(255, 'La razón social es demasiado larga.'),
+  ivaStatus: z.string(),
 });
 
-const passwordSchema = z.object({
-  currentPassword: z.string().min(1, 'La contraseña actual es requerida'),
-  newPassword: z.string().min(8, 'La nueva contraseña debe tener al menos 8 caracteres'),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Las contraseñas no coinciden',
-  path: ['confirmPassword'],
-});
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'La contraseña actual es obligatoria.'),
+    newPassword: z.string().min(8, 'La nueva contraseña debe tener al menos 8 caracteres.'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden.',
+    path: ['confirmPassword'],
+  });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
-export default function ProfilePage() {
+const API_FIELDS: Record<string, keyof ProfileFormData> = {
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  'institution.name': 'institutionName',
+  'institution.cuit': 'cuit',
+  'institution.legalName': 'legalName',
+  'institution.ivaStatus': 'ivaStatus',
+};
+
+function formValues(user: UserProfile): ProfileFormData {
+  return {
+    fullName: user.fullName,
+    email: user.email,
+    phone: user.phone ?? '',
+    institutionName: user.institution?.name ?? '',
+    cuit: user.institution?.cuit ? formatCuit(user.institution.cuit) : '',
+    legalName: user.institution?.legalName ?? '',
+    ivaStatus: user.institution?.ivaStatus ?? '',
+  };
+}
+
+function toUpdateInput(data: ProfileFormData, user: UserProfile): UpdateProfileInput {
+  const input: UpdateProfileInput = { fullName: data.fullName, email: data.email };
+  const phone = data.phone.trim();
+  if (phone) input.phone = phone;
+
+  const name = data.institutionName.trim();
+  const cuit = data.cuit.trim() || null;
+  const legalName = data.legalName.trim() || null;
+  const ivaStatus = (data.ivaStatus || null) as IvaStatus | null;
+
+  // Without an institution and nothing typed for it, there is nothing to send
+  if (user.institution || name || cuit || legalName || ivaStatus) {
+    input.institution = { cuit, legalName, ivaStatus };
+    if (name) input.institution.name = name;
+  }
+  return input;
+}
+
+function ProfileContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next');
   const { user, isAuthenticated, isLoading } = useAuthStore();
   const updateProfile = useUpdateProfile();
   const changePassword = useChangePassword();
@@ -38,10 +100,7 @@ export default function ProfilePage() {
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      fullName: user?.fullName || '',
-      email: user?.email || '',
-    },
+    defaultValues: user ? formValues(user) : undefined,
   });
 
   const passwordForm = useForm<PasswordFormData>({
@@ -51,17 +110,14 @@ export default function ProfilePage() {
   // Update form when user changes
   useEffect(() => {
     if (user) {
-      profileForm.reset({
-        fullName: user.fullName,
-        email: user.email,
-      });
+      profileForm.reset(formValues(user));
     }
   }, [user, profileForm]);
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/login');
+      router.replace('/login?next=/perfil');
     }
   }, [isLoading, isAuthenticated, router]);
 
@@ -77,16 +133,20 @@ export default function ProfilePage() {
     return null;
   }
 
+  const incomplete = !user.phone || !user.institution;
+  const errors = profileForm.formState.errors;
+
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
-      await updateProfile.mutateAsync(data);
-      success('Perfil actualizado', 'Datos actualizados.');
+      await updateProfile.mutateAsync(toUpdateInput(data, user));
+      success('Perfil actualizado');
+      if (next) router.push(safeNext(next));
     } catch (err) {
-      if (err instanceof ApiException) {
-        showError('Error', err.message);
-      } else {
-        showError('Error', 'No se pudo actualizar el perfil');
-      }
+      if (applyApiFieldErrors(err, profileForm.setError, API_FIELDS)) return;
+      showError(
+        'Error',
+        err instanceof ApiException ? err.message : 'No se pudo actualizar el perfil.'
+      );
     }
   };
 
@@ -96,53 +156,104 @@ export default function ProfilePage() {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-      success('Contraseña actualizada', 'Contraseña actualizada.');
+      success('Contraseña actualizada.');
       passwordForm.reset();
     } catch (err) {
       if (err instanceof ApiException) {
         showError('Error', err.message);
       } else {
-        showError('Error', 'No se pudo cambiar la contraseña');
+        showError('Error', 'No se pudo cambiar la contraseña.');
       }
     }
   };
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Mi Perfil</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Mi perfil</h1>
+
+      {incomplete && (
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          Complete el nombre de la institución y el WhatsApp para enviar pedidos.
+        </div>
+      )}
 
       <div className="space-y-8">
-        {/* Profile Information */}
-        <Card>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg">
-              <User className="h-5 w-5 text-[var(--color-primary)]" />
+        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-8" noValidate>
+          <Card>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg">
+                <Building2 className="h-5 w-5 text-[var(--color-primary)]" />
+              </div>
+              <CardTitle>Institución</CardTitle>
             </div>
-            <CardTitle>Información personal</CardTitle>
-          </div>
 
-          <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
-            <Input
-              label="Nombre completo"
-              error={profileForm.formState.errors.fullName?.message}
-              {...profileForm.register('fullName')}
-            />
+            <div className="space-y-4">
+              <Input
+                label="Institución"
+                error={errors.institutionName?.message}
+                {...profileForm.register('institutionName')}
+              />
+              <Input
+                label="CUIT"
+                inputMode="numeric"
+                placeholder="20-12345678-6"
+                helperText="Opcional"
+                error={errors.cuit?.message}
+                {...profileForm.register('cuit')}
+              />
+              <Input
+                label="Razón social"
+                helperText="Opcional"
+                error={errors.legalName?.message}
+                {...profileForm.register('legalName')}
+              />
+              <Select
+                label="Condición frente al IVA"
+                options={ivaStatusOptions}
+                helperText="Opcional"
+                error={errors.ivaStatus?.message}
+                {...profileForm.register('ivaStatus')}
+              />
+            </div>
+          </Card>
 
-            <Input
-              label="Correo electrónico"
-              type="email"
-              error={profileForm.formState.errors.email?.message}
-              {...profileForm.register('email')}
-            />
+          <Card>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg">
+                <User className="h-5 w-5 text-[var(--color-primary)]" />
+              </div>
+              <CardTitle>Contacto</CardTitle>
+            </div>
 
-            <Button
-              type="submit"
-              isLoading={updateProfile.isPending}
-            >
-              Guardar cambios
-            </Button>
-          </form>
-        </Card>
+            <div className="space-y-4">
+              <Input
+                label="Nombre de contacto"
+                autoComplete="name"
+                error={errors.fullName?.message}
+                {...profileForm.register('fullName')}
+              />
+              <Input
+                label="Correo electrónico"
+                type="email"
+                autoComplete="email"
+                error={errors.email?.message}
+                {...profileForm.register('email')}
+              />
+              <Input
+                label="WhatsApp"
+                type="tel"
+                autoComplete="tel"
+                helperText="El pedido se confirma por este medio."
+                error={errors.phone?.message}
+                {...profileForm.register('phone')}
+              />
+            </div>
+          </Card>
+
+          <Button type="submit" isLoading={updateProfile.isPending}>
+            Guardar cambios
+          </Button>
+        </form>
 
         {/* Change Password */}
         <Card>
@@ -157,6 +268,7 @@ export default function ProfilePage() {
             <Input
               label="Contraseña actual"
               type="password"
+              autoComplete="current-password"
               error={passwordForm.formState.errors.currentPassword?.message}
               {...passwordForm.register('currentPassword')}
             />
@@ -164,6 +276,7 @@ export default function ProfilePage() {
             <Input
               label="Nueva contraseña"
               type="password"
+              autoComplete="new-password"
               error={passwordForm.formState.errors.newPassword?.message}
               {...passwordForm.register('newPassword')}
             />
@@ -171,19 +284,31 @@ export default function ProfilePage() {
             <Input
               label="Confirmar nueva contraseña"
               type="password"
+              autoComplete="new-password"
               error={passwordForm.formState.errors.confirmPassword?.message}
               {...passwordForm.register('confirmPassword')}
             />
 
-            <Button
-              type="submit"
-              isLoading={changePassword.isPending}
-            >
+            <Button type="submit" isLoading={changePassword.isPending}>
               Cambiar contraseña
             </Button>
           </form>
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-20">
+          <Spinner size="lg" />
+        </div>
+      }
+    >
+      <ProfileContent />
+    </Suspense>
   );
 }

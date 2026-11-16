@@ -28,17 +28,39 @@ export interface ApiError {
 // ============ Auth Types ============
 export type UserRole = "owner" | "admin" | "buyer" | "partner";
 
+export type IvaStatus =
+  | "responsable_inscripto"
+  | "monotributo"
+  | "exento"
+  | "consumidor_final";
+
+export interface Institution {
+  id: string;
+  name: string;
+  cuit: string | null;
+  legalName: string | null;
+  ivaStatus: IvaStatus | null;
+}
+
 export interface UserProfile {
   id: string;
   email: string;
   fullName: string;
   role: UserRole;
+  /** WhatsApp number; null on accounts created before it was asked for. */
+  phone: string | null;
+  institution: Institution | null;
 }
 
 export interface RegisterInput {
   email: string;
   password: string;
   fullName: string;
+  phone: string;
+  institutionName: string;
+  cuit?: string;
+  legalName?: string;
+  ivaStatus?: IvaStatus;
 }
 
 export interface LoginInput {
@@ -56,6 +78,23 @@ export interface AuthResponse {
 export interface UpdateProfileInput {
   fullName?: string;
   email?: string;
+  phone?: string;
+  /** Omitted fields are kept; null clears an optional one. */
+  institution?: {
+    name?: string;
+    cuit?: string | null;
+    legalName?: string | null;
+    ivaStatus?: IvaStatus | null;
+  };
+}
+
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  newPassword: string;
 }
 
 export interface ChangePasswordInput {

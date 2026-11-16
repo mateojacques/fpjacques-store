@@ -3,7 +3,14 @@ import { authApi } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
 import { endSession, resetViewerQueries } from '@/lib/auth/viewer-queries';
 import { useMergeCart } from './use-cart';
-import type { LoginInput, RegisterInput, UpdateProfileInput, ChangePasswordInput } from '@/types';
+import type {
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
+  ChangePasswordInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
+} from '@/types';
 
 /**
  * Hook to get current user profile
@@ -119,5 +126,23 @@ export function useUpdateProfile() {
 export function useChangePassword() {
   return useMutation({
     mutationFn: (data: ChangePasswordInput) => authApi.changePassword(data),
+  });
+}
+
+/**
+ * Hook to request a password reset link
+ */
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (data: ForgotPasswordInput) => authApi.forgotPassword(data),
+  });
+}
+
+/**
+ * Hook to set a new password with a reset token
+ */
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: (data: ResetPasswordInput) => authApi.resetPassword(data),
   });
 }

@@ -7,6 +7,8 @@ import type {
   ApiResponse,
   UpdateProfileInput,
   ChangePasswordInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
 } from '@/types';
 
 export const authApi = {
@@ -39,4 +41,16 @@ export const authApi = {
    */
   changePassword: (data: ChangePasswordInput) =>
     apiClient.put<{ message: string }>('/api/auth/password', data),
+
+  /**
+   * Request a password reset link. Answers the same whether or not the email exists.
+   */
+  forgotPassword: (data: ForgotPasswordInput) =>
+    apiClient.post<ApiResponse<{ message: string }>>('/api/auth/password/forgot', data),
+
+  /**
+   * Set a new password with the token from the reset link
+   */
+  resetPassword: (data: ResetPasswordInput) =>
+    apiClient.post<ApiResponse<{ message: string }>>('/api/auth/password/reset', data),
 };
