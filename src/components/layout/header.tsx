@@ -117,7 +117,7 @@ export function Header() {
                 aria-label={itemCount > 0 ? `Carrito, ${itemCount} productos` : 'Carrito'}
               >
                 <ShoppingCart className="h-6 w-6" aria-hidden />
-                <span className="hidden text-[15px] font-medium lg:inline">Carrito</span>
+                <span className="hidden text-[15px] font-medium">Carrito</span>
                 {itemCount > 0 && (
                   <span className="absolute left-6 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-xs font-semibold tabular-nums text-white ring-2 ring-white">
                     {itemCount > 99 ? '99+' : itemCount}
