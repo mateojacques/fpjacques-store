@@ -47,8 +47,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body className={`${literata.variable} ${karla.variable} antialiased bg-gray-50`}>
+    // Font variables on <html>: globals.css reads them in :root (--font-sans, --font-display)
+    <html lang="es" className={`${literata.variable} ${karla.variable}`}>
+      <body className="antialiased bg-gray-50">
         <Providers>
           <div className="flex min-h-screen flex-col">
             <Header />
