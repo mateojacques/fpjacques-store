@@ -37,7 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: seo.ogImage ? [{ url: seo.ogImage }] : [],
       type: 'website',
     },
-    icons: branding.faviconUrl ? { icon: branding.faviconUrl } : undefined,
+    icons: {
+      icon: branding.faviconUrl || '/logo.jpg',
+      apple: '/logo.jpg',
+    },
   };
 }
 
