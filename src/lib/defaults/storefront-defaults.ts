@@ -17,9 +17,9 @@ export const storefrontDefaults: StorefrontConfig = {
   },
   
   colors: {
-    primary: '#4a90d9',
-    secondary: '#2c5282',
-    accent: '#ed8936',
+    primary: '#e1161f',
+    secondary: '#0b0b0b',
+    accent: '#701216',
     background: '#ffffff',
     text: '#1a202c',
     textMuted: '#718096',
