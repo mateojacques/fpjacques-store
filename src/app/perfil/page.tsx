@@ -22,7 +22,7 @@ const profileSchema = z.object({
     .string()
     .refine(
       (value) => value.trim() === '' || value.trim().length >= 8,
-      'Ingrese un número de WhatsApp válido, con código de área.'
+      'Ingrese el número con código de área, por ejemplo 11 2345 6789.'
     ),
   institutionName: z
     .string()
@@ -242,8 +242,9 @@ function ProfileContent() {
               <Input
                 label="WhatsApp"
                 type="tel"
+                placeholder="11 2345 6789"
                 autoComplete="tel"
-                helperText="El pedido se confirma por este medio."
+                helperText="Código de área y número, sin +54. El pedido se confirma por este medio."
                 error={errors.phone?.message}
                 {...profileForm.register('phone')}
               />

@@ -23,7 +23,7 @@ import {
 const contactSchema = z.object({
   fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Correo electrónico no válido."),
-  phone: z.string().min(8, "Ingrese un número de WhatsApp válido, con código de área."),
+  phone: z.string().min(8, "Ingrese el número con código de área, por ejemplo 11 2345 6789."),
   address: z.string().min(10, "La dirección debe tener al menos 10 caracteres."),
   customerNotes: z.string().optional(),
 });
@@ -206,8 +206,8 @@ export default function CheckoutContactPage() {
           <Input
             label="WhatsApp"
             type="tel"
-            placeholder="+54 9 11 4321-1234"
-            helperText="El pedido se confirma por este medio."
+            placeholder="11 2345 6789"
+            helperText="Código de área y número, sin +54. El pedido se confirma por este medio."
             error={errors.phone?.message}
             {...register("phone")}
           />
