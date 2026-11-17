@@ -4,7 +4,7 @@ import { Markdown } from '@/components/content/markdown';
 
 export const metadata: Metadata = {
   title: 'Términos y condiciones',
-  description: 'Términos y condiciones de uso de San Pablo.',
+  description: 'Términos y condiciones de uso de FP Jacques.',
 };
 
 export default async function TerminosPage() {

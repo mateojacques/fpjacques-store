@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FP Jacques store
+
+Customer storefront for FP Jacques. Forked from `sanpablo-store-v2` (the `upstream` remote) without institutional accounts or wholesale prices. Built with Next.js; see CLAUDE.md for the architecture.
 
 ## Getting Started
 
@@ -40,5 +42,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Base URL of the API. |
-| `NEXT_PUBLIC_SITE_URL` | Public URL of the store, used by the sitemap and robots.txt. Defaults to `https://sanpablo.go10.dev`. |
+| `NEXT_PUBLIC_SITE_URL` | Public URL of the store, used by the sitemap and robots.txt. Defaults to `https://fpjacques.go10.dev`. |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics measurement ID. Analytics only loads when this is set. |

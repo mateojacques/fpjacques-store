@@ -9,9 +9,9 @@ import { useAuthStore } from '@/stores/auth-store';
 
 /**
  * Keeps the stored login honest. A token that expired would otherwise stay in
- * localStorage: product endpoints quietly treat it as anonymous, so the store
- * would label general prices as wholesale. Any 401 on a request that sent the
- * token logs out once, and a token found on load is checked right away.
+ * localStorage while the store shows the customer as logged in. Any 401 on a
+ * request that sent the token logs out once, and a token found on load is
+ * checked right away.
  */
 export function SessionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();

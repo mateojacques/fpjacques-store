@@ -3,7 +3,7 @@ import { getStorefrontConfig } from '@/lib/api/storefront-server';
 
 export const metadata: Metadata = {
   title: 'Política de privacidad',
-  description: 'Política de privacidad y protección de datos de San Pablo.',
+  description: 'Política de privacidad y protección de datos de FP Jacques.',
 };
 
 export default async function PrivacidadPage() {
@@ -94,7 +94,9 @@ export default async function PrivacidadPage() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mb-3">9. Contacto</h2>
             <p className="text-gray-600">
-              Para consultas sobre esta política, escribir a {email}.
+              {email
+                ? `Para consultas sobre esta política, escribir a ${email}.`
+                : 'Para consultas sobre esta política, usar los canales de la página de contacto.'}
             </p>
           </section>
         </div>

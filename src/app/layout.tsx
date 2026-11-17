@@ -26,14 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      default: seo.metaTitle || `${branding.storeName} - ${branding.tagline}`,
+      default: seo.metaTitle || (branding.tagline ? `${branding.storeName} - ${branding.tagline}` : branding.storeName),
       template: `%s | ${branding.storeName}`,
     },
-    description: seo.metaDescription || `${branding.tagline}.`,
-    keywords: ['arte', 'librería', 'tienda', 'productos', 'creatividad', branding.storeName.toLowerCase()],
+    description: seo.metaDescription || branding.tagline || branding.storeName,
+    keywords: ['tienda', 'productos', branding.storeName.toLowerCase()],
     openGraph: {
       title: seo.metaTitle || branding.storeName,
-      description: seo.metaDescription || branding.tagline,
+      description: seo.metaDescription || branding.tagline || branding.storeName,
       images: seo.ogImage ? [{ url: seo.ogImage }] : [],
       type: 'website',
     },

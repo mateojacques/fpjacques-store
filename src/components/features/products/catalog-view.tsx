@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { ArrowUpDown, Building2, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowUpDown, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCategories, useProducts } from '@/hooks';
-import { useAuthStore } from '@/stores/auth-store';
 import { Skeleton } from '@/components/ui';
 import type { CategoryTree, ProductFilters } from '@/types';
 import { ProductCard } from './product-card';
@@ -49,7 +48,6 @@ export function CatalogView({ category }: CatalogViewProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const page = Math.max(1, Number(searchParams.get('page')) || 1);
@@ -240,21 +238,6 @@ export function CatalogView({ category }: CatalogViewProps) {
             />
           </div>
 
-          {!isAuthenticated && (
-            <Link
-              href="/registro"
-              className="group mb-8 flex items-center gap-3 rounded-lg bg-[var(--color-primary-50)] px-4 py-3 text-sm text-gray-800"
-            >
-              <Building2 className="h-5 w-5 shrink-0 text-[var(--color-primary-ink)]" aria-hidden />
-              <span className="flex-1">
-                Precios generales. Las instituciones con cuenta mayorista ven sus precios al ingresar.
-              </span>
-              <span className="hidden shrink-0 font-semibold text-[var(--color-primary-ink)] group-hover:underline underline-offset-4 sm:inline">
-                Abrir cuenta
-              </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[var(--color-primary-ink)] sm:hidden" aria-hidden />
-            </Link>
-          )}
 
           {isPending ? (
             <GridSkeleton />

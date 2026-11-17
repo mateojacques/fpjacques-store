@@ -15,7 +15,7 @@ export default function ContactoPage() {
           Contacto
         </h1>
         <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Canales de contacto de San Pablo.
+          Canales de contacto de FP Jacques.
         </p>
       </div>
 
@@ -35,6 +35,7 @@ export default function ContactoPage() {
           ) : (
             <div className="space-y-6">
               {/* Address */}
+              {contact?.address && (
               <div className="flex items-start gap-4 p-4 bg-white rounded-lg border">
                 <div className="flex-shrink-0 p-2 bg-[var(--color-primary-50)] rounded-lg">
                   <MapPin className="h-6 w-6 text-[var(--color-primary)]" />
@@ -42,12 +43,14 @@ export default function ContactoPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900">Dirección</h3>
                   <p className="mt-1 text-gray-600">
-                    {contact?.address || 'Av. Corrientes 1234, CABA, Argentina'}
+                    {contact.address}
                   </p>
                 </div>
               </div>
+              )}
 
               {/* Phone */}
+              {contact?.phone && (
               <div className="flex items-start gap-4 p-4 bg-white rounded-lg border">
                 <div className="flex-shrink-0 p-2 bg-[var(--color-primary-50)] rounded-lg">
                   <Phone className="h-6 w-6 text-[var(--color-primary)]" />
@@ -55,13 +58,14 @@ export default function ContactoPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900">Teléfono</h3>
                   <a 
-                    href={`tel:${contact?.phone || '+541143211234'}`}
+                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
                     className="mt-1 text-[var(--color-primary)] hover:opacity-80"
                   >
-                    {contact?.phone || '+54 11 4321-1234'}
+                    {contact.phone}
                   </a>
                 </div>
               </div>
+              )}
 
               {/* Email */}
               {contact?.email && (

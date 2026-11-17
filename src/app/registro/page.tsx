@@ -7,13 +7,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { Button, Input, Card, Select, Spinner } from '@/components/ui';
+import { Button, Input, Card, Spinner } from '@/components/ui';
 import { useRegister } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui/toast';
 import { ApiException } from '@/lib/api';
 import { safeNext } from '@/lib/utils/safe-next';
-import { applyApiFieldErrors, ivaStatusOptions } from '@/lib/utils/account-form';
-import type { IvaStatus } from '@/types';
+import { applyApiFieldErrors } from '@/lib/utils/account-form';
 
 const registerSchema = z
   .object({
@@ -22,13 +21,6 @@ const registerSchema = z
     password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres.'),
     confirmPassword: z.string(),
     phone: z.string().min(8, 'Ingrese el número con código de área, por ejemplo 11 2345 6789.'),
-    institutionName: z
-      .string()
-      .trim()
-      .min(2, 'El nombre de la institución debe tener al menos 2 caracteres.'),
-    cuit: z.string().optional(),
-    legalName: z.string().max(255, 'La razón social es demasiado larga.').optional(),
-    ivaStatus: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Las contraseñas no coinciden.',
@@ -42,13 +34,7 @@ const API_FIELDS: Record<string, keyof RegisterFormData> = {
   email: 'email',
   password: 'password',
   phone: 'phone',
-  institutionName: 'institutionName',
-  cuit: 'cuit',
-  legalName: 'legalName',
-  ivaStatus: 'ivaStatus',
 };
-
-const blankToUndefined = (value?: string) => (value && value.trim() ? value.trim() : undefined);
 
 function RegisterForm() {
   const router = useRouter();
@@ -67,8 +53,6 @@ function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const billingError = errors.cuit || errors.legalName || errors.ivaStatus;
-
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await registerMutation.mutateAsync({
@@ -76,10 +60,6 @@ function RegisterForm() {
         email: data.email,
         password: data.password,
         phone: data.phone,
-        institutionName: data.institutionName,
-        cuit: blankToUndefined(data.cuit),
-        legalName: blankToUndefined(data.legalName),
-        ivaStatus: blankToUndefined(data.ivaStatus) as IvaStatus | undefined,
       });
       success('Cuenta creada');
       router.push(safeNext(next));
@@ -97,21 +77,13 @@ function RegisterForm() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Crear cuenta</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Cuenta de la institución, para ver precios mayoristas y enviar pedidos.
+          La cuenta se usa para enviar pedidos y ver su estado.
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <Input
-          label="Institución"
-          type="text"
-          placeholder="Nombre de la escuela, biblioteca u organización"
-          error={errors.institutionName?.message}
-          {...register('institutionName')}
-        />
-
-        <Input
-          label="Nombre de contacto"
+          label="Nombre"
           type="text"
           placeholder="Nombre y apellido"
           autoComplete="name"
@@ -165,34 +137,6 @@ function RegisterForm() {
           error={errors.confirmPassword?.message}
           {...register('confirmPassword')}
         />
-
-        <details className="rounded-lg border border-gray-200 p-4" open={Boolean(billingError)}>
-          <summary className="cursor-pointer text-sm font-medium text-gray-700">
-            Datos de facturación (opcional)
-          </summary>
-          <div className="mt-4 space-y-4">
-            <Input
-              label="CUIT"
-              type="text"
-              inputMode="numeric"
-              placeholder="20-12345678-6"
-              error={errors.cuit?.message}
-              {...register('cuit')}
-            />
-            <Input
-              label="Razón social"
-              type="text"
-              error={errors.legalName?.message}
-              {...register('legalName')}
-            />
-            <Select
-              label="Condición frente al IVA"
-              options={ivaStatusOptions}
-              error={errors.ivaStatus?.message}
-              {...register('ivaStatus')}
-            />
-          </div>
-        </details>
 
         <Button type="submit" className="w-full" size="lg" isLoading={registerMutation.isPending}>
           Crear cuenta

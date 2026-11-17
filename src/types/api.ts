@@ -26,21 +26,7 @@ export interface ApiError {
 }
 
 // ============ Auth Types ============
-export type UserRole = "owner" | "admin" | "buyer" | "partner";
-
-export type IvaStatus =
-  | "responsable_inscripto"
-  | "monotributo"
-  | "exento"
-  | "consumidor_final";
-
-export interface Institution {
-  id: string;
-  name: string;
-  cuit: string | null;
-  legalName: string | null;
-  ivaStatus: IvaStatus | null;
-}
+export type UserRole = "owner" | "admin" | "buyer";
 
 export interface UserProfile {
   id: string;
@@ -49,7 +35,6 @@ export interface UserProfile {
   role: UserRole;
   /** WhatsApp number; null on accounts created before it was asked for. */
   phone: string | null;
-  institution: Institution | null;
 }
 
 export interface RegisterInput {
@@ -57,10 +42,6 @@ export interface RegisterInput {
   password: string;
   fullName: string;
   phone: string;
-  institutionName: string;
-  cuit?: string;
-  legalName?: string;
-  ivaStatus?: IvaStatus;
 }
 
 export interface LoginInput {
@@ -79,13 +60,6 @@ export interface UpdateProfileInput {
   fullName?: string;
   email?: string;
   phone?: string;
-  /** Omitted fields are kept; null clears an optional one. */
-  institution?: {
-    name?: string;
-    cuit?: string | null;
-    legalName?: string | null;
-    ivaStatus?: IvaStatus | null;
-  };
 }
 
 export interface ForgotPasswordInput {
@@ -142,9 +116,9 @@ export interface Product {
   sku: string;
   name: string;
   description: string;
-  /** The price for this viewer: general for visitors, wholesale for logged-in users. */
+  /** The price to pay: the sale price while it applies, else the regular price. */
   price: string;
-  /** The general price, when it's higher than `price` (logged-in users only). */
+  /** The regular price while a sale price applies, else null. */
   listPrice: string | null;
   imageUrl: string | null;
   thumbnailUrl: string | null;
@@ -187,7 +161,7 @@ export interface CartItem {
   productId: string;
   quantity: number;
   priceAtAdd: string;
-  /** The general price, crossed out next to priceAtAdd, when it's higher (logged-in users only). */
+  /** The regular price, crossed out next to priceAtAdd, while a sale price applies. */
   listPrice: string | null;
   /** False when the product can no longer be ordered; the checkout refuses the cart until it is removed. */
   isAvailable?: boolean;
@@ -240,13 +214,6 @@ export interface CheckoutReviewItem {
 }
 
 export interface CheckoutReview {
-  /** The institution the order is placed for, as the order will store it. */
-  institution: {
-    name: string;
-    cuit: string | null;
-    legalName: string | null;
-    ivaStatus: IvaStatus | null;
-  };
   contact: CheckoutContactInput;
   items: CheckoutReviewItem[];
   subtotal: string;
@@ -260,7 +227,7 @@ export interface SkippedOrderLine {
 
 export interface RepeatOrderResult {
   cart: Cart;
-  /** Lines whose product was deleted, deactivated or unpublished. */
+  /** Lines whose product was deleted or deactivated. */
   skipped: SkippedOrderLine[];
 }
 
@@ -409,31 +376,6 @@ export interface StorefrontConfig {
   seo: StorefrontSeo;
   ordering?: StorefrontOrdering;
   legal?: StorefrontLegal;
-}
-
-// ============ Import Types ============
-export type ImportStatus =
-  | "pending"
-  | "processing"
-  | "completed"
-  | "failed"
-  | "cancelled";
-
-export interface ImportJob {
-  id: string;
-  userId: string;
-  filename: string;
-  fileKey: string;
-  fileSize: number;
-  status: ImportStatus;
-  totalRows: number;
-  processedRows: number;
-  successRows: number;
-  errorRows: number;
-  startedAt: string | null;
-  completedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 // ============ Carousel Types ============

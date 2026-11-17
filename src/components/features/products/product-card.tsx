@@ -58,7 +58,6 @@ export function ProductCard({
           price={product.price}
           listPrice={product.listPrice}
           size="sm"
-          showLabel={false}
           className="mt-auto pt-2"
         />
 

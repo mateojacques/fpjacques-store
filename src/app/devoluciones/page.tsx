@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Devoluciones',
-  description: 'Información sobre devoluciones en San Pablo.',
+  description: 'Información sobre devoluciones en FP Jacques.',
 };
 
 export default function DevolucionesPage() {

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import {
-  Building2,
   ChevronDown,
   ChevronRight,
   LogOut,
@@ -12,6 +11,7 @@ import {
   Package,
   ShoppingCart,
   User,
+  UserPlus,
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -104,8 +104,8 @@ export function Header() {
                     href="/registro"
                     className="hidden h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-[var(--color-primary-50)] px-4 text-[15px] font-semibold text-[var(--color-primary-ink)] ring-1 ring-inset ring-[var(--color-primary-100)] transition-colors hover:bg-[var(--color-primary-100)] lg:flex"
                   >
-                    <Building2 className="h-[18px] w-[18px]" aria-hidden />
-                    Cuenta mayorista
+                    <UserPlus className="h-[18px] w-[18px]" aria-hidden />
+                    Crear cuenta
                   </Link>
                 </>
               )}
@@ -160,17 +160,6 @@ export function Header() {
                 </NavLink>
               </li>
             </ul>
-            {!isAuthenticated && (
-              <Link
-                href="/registro"
-                className="hidden shrink-0 text-sm text-gray-600 hover:text-gray-900 md:block lg:hidden"
-              >
-                Precios mayoristas para instituciones.{' '}
-                <span className="font-semibold text-[var(--color-primary-ink)] underline underline-offset-4">
-                  Abrir cuenta
-                </span>
-              </Link>
-            )}
           </div>
         </nav>
       </header>
@@ -359,9 +348,9 @@ function MobileMenu({ open, onClose, categories, pathname, firstName, isAuthenti
             </div>
           ) : (
             <div className="border-b border-gray-100 p-5">
-              <p className="text-[15px] font-semibold text-gray-900">Cuenta mayorista</p>
+              <p className="text-[15px] font-semibold text-gray-900">Cuenta</p>
               <p className="mt-1 text-sm text-gray-600">
-                Precios mayoristas para escuelas, bibliotecas y organizaciones.
+                Para enviar pedidos se necesita una cuenta.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <Link

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Entregas',
-  description: 'Información sobre las entregas de San Pablo.',
+  description: 'Información sobre las entregas de FP Jacques.',
 };
 
 export default function EnviosPage() {

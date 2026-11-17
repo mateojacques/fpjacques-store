@@ -9,8 +9,8 @@ export const storefrontDefaults: StorefrontConfig = {
   lastUpdated: new Date().toISOString(),
   
   branding: {
-    storeName: 'San Pablo',
-    tagline: 'Arte y Libros',
+    storeName: 'FP Jacques',
+    tagline: '',
     headerLogoUrl: '',
     footerLogoUrl: '',
     faviconUrl: '',
@@ -34,17 +34,17 @@ export const storefrontDefaults: StorefrontConfig = {
   
   contact: {
     whatsappNumber: '+5491123456789',
-    email: 'contacto@sanpablo.com',
-    phone: '+54 11 4321-1234',
-    address: 'Av. Corrientes 1234, CABA, Argentina',
+    email: '',
+    phone: '',
+    address: '',
     socialLinks: {
       whatsapp: '',
     },
   },
   
   seo: {
-    metaTitle: 'San Pablo - Arte y Libros',
-    metaDescription: 'Arte, libros y artículos de librería.',
+    metaTitle: 'FP Jacques',
+    metaDescription: 'Tienda online de FP Jacques.',
     ogImage: '',
   },
 

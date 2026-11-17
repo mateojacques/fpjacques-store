@@ -3,7 +3,7 @@ import type { PaginatedResponse, Product } from '@/types';
 
 export const revalidate = 3600;
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sanpablo.go10.dev';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://fpjacques.go10.dev';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 const STATIC_ROUTES = [

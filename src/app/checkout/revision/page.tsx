@@ -13,7 +13,6 @@ import {
   Mail,
   Phone,
   User,
-  Building2,
 } from "lucide-react";
 import { Button, Card, Spinner } from "@/components/ui";
 import { CheckoutSteps, OrderingNotices } from "@/components/features/checkout";
@@ -23,7 +22,6 @@ import { formatPrice } from "@/lib/utils";
 import { ApiException } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth-store";
 import { CHECKOUT_LOGIN_PATH } from "@/lib/utils/safe-next";
-import { formatCuit } from "@/lib/utils/account-form";
 
 const PROFILE_PATH = "/perfil?next=/checkout";
 
@@ -127,41 +125,6 @@ export default function CheckoutReviewPage() {
       </h1>
 
       <div className="space-y-6">
-        {/* Institution */}
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Institución</h2>
-            <Link
-              href={PROFILE_PATH}
-              className="text-sm text-[var(--color-primary)] hover:opacity-80"
-            >
-              Editar
-            </Link>
-          </div>
-          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex items-start gap-3">
-              <Building2 className="h-5 w-5 text-gray-400 mt-0.5" />
-              <div>
-                <dt className="text-gray-500">Nombre</dt>
-                <dd className="font-medium text-gray-900">
-                  {review.institution.name}
-                </dd>
-              </div>
-            </div>
-            {review.institution.cuit && (
-              <div className="flex items-start gap-3">
-                <div className="h-5 w-5" aria-hidden="true" />
-                <div>
-                  <dt className="text-gray-500">CUIT</dt>
-                  <dd className="font-medium text-gray-900">
-                    {formatCuit(review.institution.cuit)}
-                  </dd>
-                </div>
-              </div>
-            )}
-          </dl>
-        </Card>
-
         {/* Contact Information */}
         <Card>
           <div className="flex items-center justify-between mb-4">

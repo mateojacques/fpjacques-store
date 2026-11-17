@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Customer-facing storefront for "San Pablo" (an art supplies and books store in Argentina), built with Next.js 16 (App Router), React 19 and Tailwind CSS v4. This repo is **frontend only**. Products, cart, checkout, orders, auth and storefront configuration all come from a separate backend REST API. UI copy, routes (`/carrito`, `/productos/[sku]`, `/mis-ordenes`, …) and number/date formatting (`es-AR`, ARS) are in Spanish/Argentine locale.
+Customer-facing storefront for "FP Jacques" (a small catalogue, about 20 products, sold to individual customers in Argentina), forked from `sanpablo-store-v2` (the `upstream` remote) without institutional accounts or wholesale prices. Built with Next.js 16 (App Router), React 19 and Tailwind CSS v4. This repo is **frontend only**. Products, cart, checkout, orders, auth and storefront configuration all come from a separate backend REST API. UI copy, routes (`/carrito`, `/productos/[sku]`, `/mis-ordenes`, …) and number/date formatting (`es-AR`, ARS) are in Spanish/Argentine locale.
 
 ## Public copy
 
@@ -62,6 +62,4 @@ There is no test framework or test suite.
 
 **Components.** `src/components/ui/` holds the base primitives (Button, Input, Modal, Toast via `ToastProvider`, …). The other folders under `src/components/` are feature or domain components, and each folder has an `index.ts` barrel. Import from barrels (`@/components/ui`, `@/hooks`, `@/lib/api`), use the `@/*` → `src/*` path alias, and merge classes with `cn()` from `@/lib/utils`.
 
-## Design references
-
-`.impeccable/` is gitignored and exists only on this machine. It contains design critique notes and wireframe/reference images ("Wireframes San Pablo") from earlier redesign work. Consult it when doing visual or UX changes.
+**Accounts and prices.** Customers sign up with name, email, password and WhatsApp. Everyone sees the same price: `price` is what the API says to pay and `listPrice`, when set, is the regular price shown crossed out during a sale (`ProductPrice`). Checkout needs a login and a WhatsApp number on the profile; the API answers `PROFILE_INCOMPLETE` otherwise and the review page sends the customer to `/perfil`.

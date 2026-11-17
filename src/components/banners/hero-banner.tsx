@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button, Skeleton } from '@/components/ui';
-import { useBanners } from '@/lib/providers';
+import { useBanners, useBranding } from '@/lib/providers';
+import { storefrontDefaults } from '@/lib/defaults/storefront-defaults';
 import type { HeroBanner as HeroBannerType } from '@/types';
 
 interface HeroBannerProps {
@@ -16,16 +17,19 @@ interface HeroBannerProps {
  * Fallback hero when no banners are configured
  */
 function HeroBannerFallback() {
+  const { branding } = useBranding();
+  const storeName = branding?.storeName ?? storefrontDefaults.branding.storeName;
+
   return (
     <section className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="max-w-2xl">
           <h1 className="font-display text-balance text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-            Arte, libros y artículos de librería
+            {storeName}
           </h1>
-          <p className="mt-6 text-lg md:text-xl opacity-90">
-            Productos para artistas, estudiantes y creativos.
-          </p>
+          {branding?.tagline && (
+            <p className="mt-6 text-lg md:text-xl opacity-90">{branding.tagline}</p>
+          )}
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link href="/productos">
               <Button size="lg" className="bg-white text-[var(--color-primary)] hover:bg-gray-100 w-full sm:w-auto">

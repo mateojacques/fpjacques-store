@@ -106,7 +106,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             price={product.price}
             listPrice={product.listPrice}
             size="lg"
-            showSignupHint
             className="mt-4"
           />
 

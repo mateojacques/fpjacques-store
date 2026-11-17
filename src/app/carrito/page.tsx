@@ -150,7 +150,6 @@ export default function CartPage() {
                           <ProductPrice
                             price={item.priceAtAdd}
                             listPrice={item.listPrice}
-                            showLabel={false}
                             className="mt-2"
                           />
                         )}

@@ -176,7 +176,6 @@ export function CartDrawer() {
                             price={item.priceAtAdd}
                             listPrice={item.listPrice}
                             size="sm"
-                            showLabel={false}
                             className="mt-1"
                           />
                         )}

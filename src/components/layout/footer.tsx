@@ -55,9 +55,7 @@ export function Footer() {
             ) : (
               <StoreLogo variant="footer" />
             )}
-            <p className="mt-4 text-sm">
-              {tagline}
-            </p>
+            {tagline && <p className="mt-4 text-sm">{tagline}</p>}
             <div className="mt-6">
               {contactLoading ? (
                 <div className="flex gap-4">
