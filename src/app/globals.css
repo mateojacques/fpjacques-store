@@ -4,6 +4,8 @@
 :root {
   --color-primary: #4a90d9;
   --color-primary-dark: #3a7bc8;
+  /* Brand color dark enough for small text on white or primary-50 */
+  --color-primary-ink: color-mix(in srgb, var(--color-primary) 60%, black);
   --color-primary-light: #6ba8e5;
   --color-primary-50: #eef5fc;
   --color-primary-100: #d4e6f7;
@@ -17,6 +19,18 @@
   --color-text-muted: #718096;
   --font-sans: var(--font-karla), system-ui, -apple-system, sans-serif;
   --font-display: var(--font-literata), Georgia, serif;
+
+  /* WhatsApp's own brand green, for WhatsApp actions only */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+
+  /* Layering: page chrome below overlays, overlays below feedback */
+  --z-sticky: 30;
+  --z-header: 40;
+  --z-floating: 45;
+  --z-overlay: 50;
+  --z-drawer: 60;
+  --z-toast: 80;
 }
 
 @theme inline {
@@ -46,6 +60,26 @@ body {
 .font-display {
   font-family: var(--font-display);
   letter-spacing: -0.01em;
+}
+
+/* Everything clickable shows the pointer (Tailwind v4 leaves buttons on the default cursor) */
+@layer base {
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  select:not(:disabled),
+  summary,
+  label[for],
+  input[type='checkbox']:not(:disabled),
+  input[type='radio']:not(:disabled),
+  input[type='range']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Search inputs: the header search has its own clear button */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* Focus styles */
@@ -114,6 +148,26 @@ body {
   }
 }
 
+@keyframes slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @keyframes zoom-in-95 {
   from {
     opacity: 0;
@@ -126,8 +180,8 @@ body {
 }
 
 .animate-in {
-  animation-duration: 200ms;
-  animation-timing-function: ease-out;
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
   animation-fill-mode: forwards;
 }
 
@@ -141,4 +195,23 @@ body {
 
 .zoom-in-95 {
   animation-name: zoom-in-95;
+}
+
+.slide-in-from-left {
+  animation-name: slide-in-from-left;
+}
+
+.slide-in-from-bottom {
+  animation-name: slide-in-from-bottom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-in {
+    animation-name: fade-in;
+    animation-duration: 120ms;
+  }
 }

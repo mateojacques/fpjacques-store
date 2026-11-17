@@ -2,79 +2,87 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Package } from 'lucide-react';
+import { Package, Plus } from 'lucide-react';
 import type { Product } from '@/types';
-import { Button, Card } from '@/components/ui';
+import { cn } from '@/lib/utils';
 import { ProductPrice } from './product-price';
-import { useAddToCart } from '@/hooks/use-cart';
-import { useToast } from '@/components/ui/toast';
+import { useAddToCartWithToast } from '@/components/features/cart/use-add-to-cart-with-toast';
 
 interface ProductCardProps {
   product: Product;
+  /** Passed to next/image; the default fits the catalogue grid. */
+  sizes?: string;
+  className?: string;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const addToCart = useAddToCart();
-  const { success, error } = useToast();
-
-  const handleAddToCart = async () => {
-    try {
-      await addToCart.mutateAsync({ productId: product.id, quantity: 1 });
-      success('Producto agregado', `${product.name} se agrego al carrito`);
-    } catch (err) {
-      error('Error', 'No se pudo agregar el producto al carrito');
-    }
-  };
+export function ProductCard({
+  product,
+  sizes = '(max-width: 767px) 50vw, (max-width: 1279px) 30vw, 22vw',
+  className,
+}: ProductCardProps) {
+  const { add, isPending } = useAddToCartWithToast();
+  const href = `/productos/${product.sku}`;
 
   return (
-    <Card padding="none" hover className="group overflow-hidden">
-      {/* Image Container */}
-      <Link href={`/productos/${product.sku}`} className="block relative aspect-square overflow-hidden bg-gray-100">
+    <article className={cn('group flex flex-col', className)}>
+      <Link
+        href={href}
+        className="relative block aspect-square overflow-hidden rounded-lg bg-gray-100"
+        tabIndex={-1}
+        aria-hidden
+      >
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
-            alt={product.name}
+            alt=""
             fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            // Product photos have white backgrounds: multiply blends them into the well
+            className="object-contain p-3 mix-blend-multiply transition-transform duration-300 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100 sm:p-5"
+            sizes={sizes}
           />
         ) : (
-          <div className="flex items-center justify-center h-full">
-            <Package className="h-16 w-16 text-gray-300" />
+          <div className="flex h-full items-center justify-center">
+            <Package className="h-12 w-12 text-gray-300" />
           </div>
         )}
       </Link>
 
-      {/* Content */}
-      <div className="p-4">
-        <Link href={`/productos/${product.sku}`}>
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 hover:text-[var(--color-primary)] transition-colors">
+      <div className="flex flex-1 flex-col pt-3">
+        <h3 className="text-sm leading-snug text-gray-800 line-clamp-2 sm:text-[15px]">
+          <Link href={href} className="hover:text-gray-950 hover:underline underline-offset-2">
             {product.name}
-          </h3>
-        </Link>
-        
-        <p className="mt-1 text-xs text-gray-500">SKU: {product.sku}</p>
+          </Link>
+        </h3>
 
-        {/* Price */}
         <ProductPrice
           price={product.price}
           listPrice={product.listPrice}
-          showSignupHint
-          className="mt-2"
+          size="sm"
+          showLabel={false}
+          className="mt-auto pt-2"
         />
 
-        {/* Add to Cart Button */}
-        <Button
-          onClick={handleAddToCart}
-          isLoading={addToCart.isPending}
-          disabled={!product.isActive}
-          className="mt-3 w-full"
-          size="sm"
+        <button
+          type="button"
+          onClick={() => add(product)}
+          disabled={!product.isActive || isPending}
+          aria-label={`Agregar ${product.name} al carrito`}
+          className={cn(
+            'mt-3 flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border text-sm font-semibold transition-colors',
+            'border-[var(--color-primary)] text-[var(--color-primary-ink)] hover:bg-[var(--color-primary)] hover:text-white',
+            'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-primary-100)]',
+            'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent',
+            isPending && 'disabled:border-[var(--color-primary)] disabled:text-[var(--color-primary-ink)]'
+          )}
         >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          {product.isActive ? 'Agregar al carrito' : 'No disponible'}
-        </Button>
+          {isPending ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent" aria-hidden />
+          ) : (
+            product.isActive && <Plus className="h-4 w-4" aria-hidden />
+          )}
+          {product.isActive ? 'Agregar' : 'No disponible'}
+        </button>
       </div>
-    </Card>
+    </article>
   );
 }

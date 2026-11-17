@@ -116,6 +116,8 @@ export interface Category {
 
 export interface CategoryTree extends Category {
   children: CategoryTree[];
+  /** Image of the first public product in the category or its subcategories. */
+  imageUrl?: string | null;
 }
 
 export interface CreateCategoryInput {

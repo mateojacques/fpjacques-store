@@ -2,161 +2,120 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight, FolderOpen } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { useCategories } from '@/hooks';
 import { Skeleton } from '@/components/ui';
 import type { CategoryTree } from '@/types';
 
-// Category card component
-function CategoryCard({ category }: { category: CategoryTree }) {
-  const hasChildren = category.children && category.children.length > 0;
+/** Subcategories listed under each tile before "Ver N más". */
+const VISIBLE_CHILDREN = 4;
+
+function CategoryTile({ category }: { category: CategoryTree }) {
+  const href = `/categorias/${category.slug}`;
+  const children = category.children ?? [];
+  const hidden = children.length - VISIBLE_CHILDREN;
 
   return (
-    <Link
-      href={`/categorias/${category.slug}`}
-      className="group block bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[var(--color-primary)]/30 transition-all duration-200"
-    >
-      <div className="aspect-[4/3] bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
-        <FolderOpen className="h-16 w-16 text-[var(--color-primary)]/40 group-hover:text-[var(--color-primary)] transition-colors" />
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[var(--color-primary)] transition-colors">
-          {category.name}
-        </h3>
-        {category.description && (
-          <p className="mt-1 text-sm text-gray-500 line-clamp-2">
-            {category.description}
-          </p>
-        )}
-        {hasChildren && (
-          <p className="mt-2 text-xs text-gray-400">
-            {category.children.length} subcategoria{category.children.length !== 1 ? 's' : ''}
-          </p>
-        )}
-        <div className="mt-3 flex items-center text-sm text-[var(--color-primary)] font-medium">
-          Ver productos
-          <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+    <li>
+      <Link href={href} className="group block">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
+          {category.imageUrl ? (
+            <Image
+              src={category.imageUrl}
+              alt=""
+              fill
+              // Product photos have white backgrounds: multiply blends them into the well
+              className="object-contain p-5 mix-blend-multiply transition-transform duration-300 ease-out group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100 sm:p-8"
+              sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <Package className="h-12 w-12 text-gray-300" aria-hidden />
+            </div>
+          )}
         </div>
-      </div>
-    </Link>
+        <h2 className="mt-3 font-display text-lg font-semibold text-gray-950 underline-offset-4 group-hover:underline sm:text-xl">
+          {category.name}
+        </h2>
+      </Link>
+
+      {children.length > 0 && (
+        <ul className="mt-1.5 space-y-1 text-sm text-gray-700">
+          {children.slice(0, VISIBLE_CHILDREN).map((child) => (
+            <li key={child.id}>
+              <Link href={`/categorias/${child.slug}`} className="hover:text-gray-950 hover:underline">
+                {child.name}
+              </Link>
+            </li>
+          ))}
+          {hidden > 0 && (
+            <li>
+              <Link
+                href={href}
+                className="font-medium text-[var(--color-primary-ink)] underline underline-offset-4 hover:text-gray-950"
+              >
+                {hidden === 1 ? 'Ver 1 más' : `Ver ${hidden} más`}
+              </Link>
+            </li>
+          )}
+        </ul>
+      )}
+    </li>
   );
 }
 
-// Category skeleton for loading state
-function CategorySkeleton() {
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-      <Skeleton className="aspect-[4/3]" />
-      <div className="p-4 space-y-2">
-        <Skeleton className="h-6 w-3/4" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-1/2" />
-      </div>
-    </div>
-  );
-}
+const gridClass = 'grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8';
 
 export default function CategoriasPage() {
-  const { data, isLoading, error } = useCategories();
-  const categories = data?.data || [];
-
-  // Filter only root categories (parentId is null)
-  const rootCategories = categories.filter((cat) => !cat.parentId);
+  const { data, isPending, error, refetch } = useCategories();
+  const categories = (data?.data ?? []).filter((c) => !c.parentId);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Categorías
-        </h1>
-        <p className="mt-2 text-gray-600">
-          Categorías de productos
-        </p>
-      </div>
+    <div className="bg-white">
+      <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 md:pt-10 lg:px-8">
+        <h1 className="font-display text-2xl font-semibold text-gray-950 md:text-3xl">Categorías</h1>
 
-      {/* Error State */}
-      {error && (
-        <div className="text-center py-12">
-          <p className="text-red-600">No se pudieron cargar las categorías.</p>
-        </div>
-      )}
-
-      {/* Loading State */}
-      {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <CategorySkeleton key={i} />
-          ))}
-        </div>
-      )}
-
-      {/* Categories Grid */}
-      {!isLoading && !error && (
-        <>
-          {rootCategories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {rootCategories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
+        <div className="mt-6 md:mt-8">
+          {isPending ? (
+            <ul className={gridClass} aria-hidden>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <li key={i}>
+                  <Skeleton className="aspect-[4/3]" />
+                  <Skeleton className="mt-3 h-6 w-2/3" />
+                  <Skeleton className="mt-2 h-4 w-1/2" />
+                </li>
               ))}
+            </ul>
+          ) : error ? (
+            <div className="border-t border-gray-200 py-12">
+              <p className="text-gray-800">No se pudieron cargar las categorías.</p>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="mt-3 text-sm font-semibold text-[var(--color-primary-ink)] underline underline-offset-4"
+              >
+                Reintentar
+              </button>
             </div>
+          ) : categories.length > 0 ? (
+            <ul className={gridClass}>
+              {categories.map((category) => (
+                <CategoryTile key={category.id} category={category} />
+              ))}
+            </ul>
           ) : (
-            <div className="text-center py-12">
-              <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900">
-                No hay categorías
-              </h3>
-              <p className="mt-2 text-gray-500">
-                Todavía no hay categorías en la tienda.
-              </p>
+            <div className="border-t border-gray-200 py-12">
+              <p className="text-gray-800">Todavía no hay categorías con productos publicados.</p>
+              <Link
+                href="/productos"
+                className="mt-3 inline-block text-sm font-semibold text-[var(--color-primary-ink)] underline underline-offset-4"
+              >
+                Ver todos los productos
+              </Link>
             </div>
           )}
-        </>
-      )}
-
-      {/* All Categories Tree View */}
-      {!isLoading && !error && categories.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Todas las categorías
-          </h2>
-          <div className="bg-white rounded-lg border divide-y">
-            {categories.map((category) => (
-              <CategoryTreeItem key={category.id} category={category} level={0} />
-            ))}
-          </div>
         </div>
-      )}
+      </div>
     </div>
-  );
-}
-
-// Tree view item component
-function CategoryTreeItem({ category, level }: { category: CategoryTree; level: number }) {
-  const hasChildren = category.children && category.children.length > 0;
-
-  return (
-    <>
-      <Link
-        href={`/categorias/${category.slug}`}
-        className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-        style={{ paddingLeft: `${16 + level * 24}px` }}
-      >
-        <div className="flex items-center gap-3">
-          <FolderOpen className="h-5 w-5 text-gray-400" />
-          <span className="font-medium text-gray-900">{category.name}</span>
-          {hasChildren && (
-            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-              {category.children.length}
-            </span>
-          )}
-        </div>
-        <ChevronRight className="h-5 w-5 text-gray-400" />
-      </Link>
-      {hasChildren &&
-        category.children.map((child) => (
-          <CategoryTreeItem key={child.id} category={child} level={level + 1} />
-        ))}
-    </>
   );
 }

@@ -2,87 +2,14 @@
 
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight, ShoppingCart, Package, ArrowRight } from 'lucide-react';
-import type { CarouselWithProducts, Product } from '@/types';
-import { Button, Skeleton, Card } from '@/components/ui';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import type { CarouselWithProducts } from '@/types';
+import { Skeleton } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import { ProductPrice } from '@/components/features/products/product-price';
-import { useAddToCart } from '@/hooks/use-cart';
-import { useToast } from '@/components/ui/toast';
+import { ProductCard } from '@/components/features/products/product-card';
 
 interface ProductCarouselProps {
   carousel: CarouselWithProducts;
-}
-
-function CarouselProductCard({ product }: { product: Product }) {
-  const addToCart = useAddToCart();
-  const { success, error } = useToast();
-
-  const handleAddToCart = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      await addToCart.mutateAsync({ productId: product.id, quantity: 1 });
-      success('Producto agregado', `${product.name} se agrego al carrito`);
-    } catch (err) {
-      error('Error', 'No se pudo agregar el producto al carrito');
-    }
-  };
-
-  return (
-    <Card
-      padding="none"
-      hover
-      className="flex-shrink-0 w-[180px] sm:w-[220px] md:w-[260px] group overflow-hidden"
-    >
-      {/* Image Container */}
-      <Link href={`/productos/${product.sku}`} className="block relative aspect-square overflow-hidden bg-gray-100">
-        {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 640px) 180px, (max-width: 768px) 220px, 260px"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <Package className="h-12 w-12 text-gray-300" />
-          </div>
-        )}
-      </Link>
-
-      {/* Content */}
-      <div className="p-3">
-        <Link href={`/productos/${product.sku}`}>
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 hover:text-[var(--color-primary)] transition-colors min-h-[2.5rem]">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Price */}
-        <ProductPrice
-          price={product.price}
-          listPrice={product.listPrice}
-          size="sm"
-          className="mt-2"
-        />
-
-        {/* Add to Cart Button */}
-        <Button
-          onClick={handleAddToCart}
-          isLoading={addToCart.isPending}
-          disabled={!product.isActive}
-          className="mt-2 w-full"
-          size="sm"
-        >
-          <ShoppingCart className="h-4 w-4 mr-1" />
-          Agregar
-        </Button>
-      </div>
-    </Card>
-  );
 }
 
 export function ProductCarousel({ carousel }: ProductCarouselProps) {
@@ -160,7 +87,7 @@ export function ProductCarousel({ carousel }: ProductCarouselProps) {
                   ? 'border-gray-300 text-gray-700 hover:bg-gray-50'
                   : 'border-gray-200 text-gray-300 cursor-not-allowed'
               )}
-              aria-label="Scroll left"
+              aria-label="Anteriores"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -173,7 +100,7 @@ export function ProductCarousel({ carousel }: ProductCarouselProps) {
                   ? 'border-gray-300 text-gray-700 hover:bg-gray-50'
                   : 'border-gray-200 text-gray-300 cursor-not-allowed'
               )}
-              aria-label="Scroll right"
+              aria-label="Siguientes"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -201,18 +128,24 @@ export function ProductCarousel({ carousel }: ProductCarouselProps) {
           }}
         >
           {carousel.products.map((product) => (
-            <CarouselProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              sizes="(max-width: 640px) 168px, (max-width: 768px) 208px, 232px"
+              className="w-[168px] flex-shrink-0 sm:w-[208px] md:w-[232px]"
+            />
           ))}
         </div>
       </div>
 
       {/* View All - Mobile */}
       <div className="sm:hidden px-4 mt-4">
-        <Link href={viewAllLink}>
-          <Button variant="outline" className="w-full">
-            Ver todos los productos
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+        <Link
+          href={viewAllLink}
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-800 active:bg-gray-50"
+        >
+          Ver todos los productos
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </section>
@@ -231,7 +164,7 @@ export function ProductCarouselSkeleton() {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className="flex-shrink-0 w-[180px] sm:w-[220px] md:w-[260px]"
+            className="flex-shrink-0 w-[168px] sm:w-[208px] md:w-[232px]"
           >
             <Skeleton className="aspect-square rounded-lg" />
             <Skeleton className="h-4 w-3/4 mt-3" />

@@ -15,18 +15,18 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   if (totalPages <= 1) return null;
 
   return (
-    <nav className="flex items-center justify-center gap-1" aria-label="Pagination">
+    <nav className="flex items-center justify-center gap-1" aria-label="Páginas">
       {/* Previous */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
         className={cn(
-          'flex items-center justify-center h-10 w-10 rounded-lg border transition-colors',
+          'flex items-center justify-center h-11 w-11 rounded-lg border transition-colors',
           currentPage <= 1
             ? 'border-gray-200 text-gray-300 cursor-not-allowed'
-            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            : 'border-gray-200 text-gray-800 hover:border-gray-400'
         )}
-        aria-label="Previous page"
+        aria-label="Página anterior"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
@@ -49,12 +49,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
             key={pageNumber}
             onClick={() => onPageChange(pageNumber)}
             className={cn(
-              'flex items-center justify-center h-10 w-10 rounded-lg border font-medium transition-colors',
+              'flex items-center justify-center h-11 min-w-11 px-2 rounded-lg border font-medium tabular-nums transition-colors',
               isActive
-                ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                ? 'border-gray-900 bg-gray-900 text-white'
+                : 'border-gray-200 text-gray-800 hover:border-gray-400'
             )}
-            aria-label={`Page ${pageNumber}`}
+            aria-label={`Página ${pageNumber}`}
             aria-current={isActive ? 'page' : undefined}
           >
             {pageNumber}
@@ -67,12 +67,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
         className={cn(
-          'flex items-center justify-center h-10 w-10 rounded-lg border transition-colors',
+          'flex items-center justify-center h-11 w-11 rounded-lg border transition-colors',
           currentPage >= totalPages
             ? 'border-gray-200 text-gray-300 cursor-not-allowed'
-            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            : 'border-gray-200 text-gray-800 hover:border-gray-400'
         )}
-        aria-label="Next page"
+        aria-label="Página siguiente"
       >
         <ChevronRight className="h-5 w-5" />
       </button>

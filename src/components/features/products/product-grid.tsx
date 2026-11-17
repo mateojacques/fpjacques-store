@@ -26,7 +26,7 @@ export function ProductGrid({ filters, limit, emptyMessage }: ProductGridProps) 
     return (
       <div className="text-center py-12">
         <p className="text-red-600">Error al cargar los productos</p>
-        <p className="text-sm text-gray-500 mt-1">Por favor intenta de nuevo</p>
+        <p className="text-sm text-gray-600 mt-1">Puede ser un problema de conexión.</p>
       </div>
     );
   }
@@ -37,13 +37,13 @@ export function ProductGrid({ filters, limit, emptyMessage }: ProductGridProps) 
     return (
       <div className="text-center py-12">
         <p className="text-gray-900 font-medium">{emptyMessage || 'No se encontraron productos'}</p>
-        <p className="text-sm text-gray-500 mt-1">Intenta con otros filtros</p>
+        <p className="text-sm text-gray-600 mt-1">Quite algún filtro para ver más productos.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

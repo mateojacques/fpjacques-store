@@ -40,11 +40,11 @@ export function ProductPrice({
         <p className={cn('font-medium text-gray-500', s.note)}>Precio mayorista</p>
       )}
       <div className="flex items-baseline gap-2">
-        <span className={cn('font-bold text-[var(--color-primary)]', s.price)}>
+        <span className={cn('font-bold tabular-nums text-gray-950', s.price)}>
           {formatPrice(price)}
         </span>
         {listPrice && (
-          <span className={cn('text-gray-400 line-through', s.list)}>{formatPrice(listPrice)}</span>
+          <span className={cn('tabular-nums text-gray-500 line-through', s.list)}>{formatPrice(listPrice)}</span>
         )}
       </div>
       {!isAuthenticated && showSignupHint && (

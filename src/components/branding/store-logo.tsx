@@ -20,12 +20,13 @@ export function StoreLogo({ variant = 'header', className = '' }: StoreLogoProps
   
   const storeName = branding?.storeName ?? storefrontDefaults.branding.storeName;
 
-  if (isLoading) {
-    const skeletonClassName = 'w-[160px] h-[56px]';
-    return <Skeleton className={`${skeletonClassName} ${className}`} />;
-  }
+  // Smaller on phones, where the header also holds the menu, account and cart
+  const logoBoxClassName =
+    variant === 'header' ? 'w-[124px] h-[43px] md:w-[160px] md:h-[56px]' : 'w-[160px] h-[56px]';
 
-  const logoBoxClassName = 'w-[160px] h-[56px]';
+  if (isLoading) {
+    return <Skeleton className={`${logoBoxClassName} ${className}`} />;
+  }
 
   const content = logoUrl ? (
     <span className={`relative block ${logoBoxClassName} overflow-hidden ${className}`}>
@@ -33,7 +34,7 @@ export function StoreLogo({ variant = 'header', className = '' }: StoreLogoProps
         src={logoUrl}
         alt={storeName}
         fill
-        sizes="160px"
+        sizes="(max-width: 767px) 124px, 160px"
         className="object-cover object-center"
         priority={variant === 'header'}
       />

@@ -18,6 +18,7 @@ export function ThemeStyles() {
     :root {
       --color-primary: ${c.primary};
       --color-primary-dark: color-mix(in srgb, ${c.primary} 85%, black);
+      --color-primary-ink: color-mix(in srgb, ${c.primary} 60%, black);
       --color-primary-light: color-mix(in srgb, ${c.primary} 85%, white);
       --color-primary-50: color-mix(in srgb, ${c.primary} 10%, white);
       --color-primary-100: color-mix(in srgb, ${c.primary} 20%, white);

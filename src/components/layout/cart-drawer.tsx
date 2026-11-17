@@ -69,12 +69,16 @@ export function CartDrawer() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 animate-in fade-in"
+        className="fixed inset-0 bg-black/40 animate-in fade-in"
+        style={{ zIndex: 'var(--z-overlay)' }}
         onClick={closeCart}
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl z-50 flex flex-col animate-in slide-in-from-right">
+      <div
+        className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl flex flex-col animate-in slide-in-from-right"
+        style={{ zIndex: 'var(--z-drawer)' }}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">

@@ -5,8 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, Minus, Plus, Package, ChevronLeft, Check } from 'lucide-react';
 import { useProductBySku } from '@/hooks/use-products';
-import { useAddToCart } from '@/hooks/use-cart';
-import { useToast } from '@/components/ui/toast';
+import { useAddToCartWithToast } from '@/components/features/cart';
 import { Button, Badge, Spinner } from '@/components/ui';
 import { ProductPrice } from '@/components/features/products/product-price';
 import { formatPrice } from '@/lib/utils';
@@ -19,8 +18,7 @@ interface ProductDetailPageProps {
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { sku } = use(params);
   const { data, isLoading, error } = useProductBySku(sku);
-  const addToCart = useAddToCart();
-  const { success, error: showError } = useToast();
+  const addToCart = useAddToCartWithToast();
   const [quantity, setQuantity] = useState(1);
 
   const product = data?.data;
@@ -49,14 +47,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     );
   }
 
-  const handleAddToCart = async () => {
-    try {
-      await addToCart.mutateAsync({ productId: product.id, quantity });
-      success('Producto agregado', `${product.name} se agrego al carrito`);
-    } catch (err) {
-      showError('Error', 'No se pudo agregar el producto al carrito');
-    }
-  };
+  const handleAddToCart = () => addToCart.add(product, quantity);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">

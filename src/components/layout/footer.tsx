@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
-import { StoreLogo, SocialLinks } from '@/components/branding';
+import { Mail, Phone, MapPin } from 'lucide-react';
+import { StoreLogo, SocialLinks, WhatsAppIcon } from '@/components/branding';
 import { useBranding, useContact } from '@/lib/providers';
 import { storefrontDefaults } from '@/lib/defaults/storefront-defaults';
 import { Skeleton } from '@/components/ui';
@@ -71,25 +71,17 @@ export function Footer() {
             </div>
 
             {contactLoading ? (
-              <div className="mt-4">
-                <Skeleton className="h-10 w-full max-w-sm bg-gray-700" />
-              </div>
+              <Skeleton className="mt-6 h-10 w-48 rounded-full bg-gray-700" />
             ) : whatsappChannelUrl ? (
-              <div className="mt-4 max-w-sm">
-                <p className="text-sm text-gray-300">
-                  Canal de WhatsApp con novedades.
-                </p>
-                <a
-                  href={whatsappChannelUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-                  aria-label="Abrir canal de WhatsApp"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Unirme al canal
-                </a>
-              </div>
+              <a
+                href={whatsappChannelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-[var(--color-whatsapp)] py-2.5 pl-3.5 pr-5 text-sm font-semibold text-gray-950 transition-colors hover:bg-[var(--color-whatsapp-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-whatsapp)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+              >
+                <WhatsAppIcon className="h-5 w-5" />
+                Canal de Novedades
+              </a>
             ) : null}
           </div>
 
